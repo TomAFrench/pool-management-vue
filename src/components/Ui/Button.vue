@@ -17,9 +17,9 @@ export default {
 @import '../../vars';
 
 .button {
-  background-color: $secondary-button-background;
-  color: $secondary-button-text;
-  border: 1px solid $secondary-button-border;
+  background-color: $primary-button-background;
+  color: $primary-button-text;
+  border: 1px solid $primary-button-border;
   border-radius: 22px;
   padding: 0 22px 3px;
   outline: none;
@@ -28,7 +28,7 @@ export default {
   margin: 0;
 
   &:hover {
-    background-color: $secondary-button-background-hover;
+    background-color: $primary-button-background-hover;
   }
 
   &:disabled {

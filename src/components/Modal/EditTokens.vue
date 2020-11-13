@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t('addRemoveTokens')" class="text-white" />
+        <h3 v-text="$t('addRemoveTokens')" />
       </template>
       <UiTable v-if="step === 0" class="m-4">
         <UiTableTh>

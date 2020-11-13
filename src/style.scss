@@ -3,7 +3,7 @@
 @import "~@primer/css/index.scss";
 
 html, body, #app {
-  background-color: $black;
+  background-color: $white;
   color: $gray;
   font-family: $font-weight-normal;
   -webkit-font-smoothing: antialiased;
@@ -15,7 +15,7 @@ html, body, #app {
 }
 
 h1, h2, h3, h4 {
-  color: $white;
+  // color: $black;
   font-family: $font-weight-bold;
 }
 
@@ -39,7 +39,7 @@ a {
 .input {
   padding: 0 14px;
   outline: none;
-  color: $white;
+  // color: $white;
   min-height: 38px;
   line-height: 28px;
   background-color: transparent;
@@ -121,7 +121,7 @@ a {
 }
 
 .text-black {
-  color: $black;
+  color: $black
 }
 
 .vue-ui-loading-indicator {
@@ -130,8 +130,8 @@ a {
   }
 
   .animation {
-    border-color: transparentize($white, 0.8);
-    border-right-color: $white;
+    border-color: transparentize($black, 0.8);
+    border-right-color: $black;
   }
 
   .loading-xl {

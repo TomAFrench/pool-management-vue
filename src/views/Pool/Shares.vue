@@ -19,7 +19,6 @@
                 `${_etherscanLink(pool.id, 'token')}?a=${share.userAddress.id}`
               "
               target="_blank"
-              class="text-white"
             >
               <Avatar :address="share.userAddress.id" class="mr-2" />
               {{ _shortenAddress(share.userAddress.id) }}
@@ -49,7 +48,7 @@
     </div>
     <div
       v-if="shares.length === 0 && !loading"
-      class="border-top d-flex flex-items-center p-4 text-white"
+      class="border-top d-flex flex-items-center p-4 text-black"
       v-text="$t('emptyState')"
     />
   </UiTable>

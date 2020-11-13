@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" v-if="pool.id">
     <UiModalForm>
       <template slot="header">
-        <h3 v-text="$t('removeLiquidity')" class="text-white" />
+        <h3 v-text="$t('removeLiquidity')" />
       </template>
       <div class="text-center m-4 mt-0">
         <Toggle
@@ -28,7 +28,7 @@
             <UiTableTr
               v-for="token in tokens"
               :key="token.address"
-              class="text-white asset"
+              class="asset"
               :class="{
                 active: isMultiAsset || activeToken === token.address
               }"
@@ -47,7 +47,7 @@
                   "
                 />
                 <Token :address="token.address" class="mr-3" size="20" />
-                <div v-text="token.symbol" class="text-white" />
+                <div v-text="token.symbol" />
               </div>
               <div class="column">
                 {{ _num(token.myBalance) }}
@@ -58,7 +58,7 @@
             </UiTableTr>
           </UiTable>
           <UiTable class="mt-4">
-            <UiTableTh class="text-left flex-items-center text-white">
+            <UiTableTh class="text-left flex-items-center">
               <div v-text="$t('amount')" class="flex-auto" />
               <div class="ml-2">
                 {{ _num(poolTokenBalance) }} {{ _shorten(pool.symbol, 12) }}
@@ -69,7 +69,7 @@
               <input
                 id="poolAmountIn"
                 v-model="poolAmountIn"
-                :class="validationError ? 'text-red' : 'text-white'"
+                :class="validationError ? 'text-red' : 'text-black'"
                 class="input text-right column-sm"
                 placeholder="0.0"
               />

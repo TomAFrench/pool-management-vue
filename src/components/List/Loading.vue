@@ -13,7 +13,7 @@
         :style="`opacity: ${1 - (i - 1) / 2.5}`"
       >
         <span
-          class="bg-gray d-inline-block rounded-1 anim-pulse my-1"
+          class="loader d-inline-block rounded-1 anim-pulse my-1"
           :style="style"
         />
       </div>
@@ -37,3 +37,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import '../../vars';
+
+.loader {
+  background-color: $panel-border;
+}
+</style>

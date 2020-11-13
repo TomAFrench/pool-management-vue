@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t('editCap')" class="text-white" />
+        <h3 v-text="$t('editCap')" />
       </template>
       <div class="text-center m-4">
         <h5 class="px-4 mb-4 mx-auto overflow-hidden" style="max-width: 340px;">
@@ -20,7 +20,7 @@
           type="number"
           class="h3 py-2 px-3 input text-center"
           placeholder="100"
-          :class="isValid ? 'text-white' : 'text-red'"
+          :class="isValid ? 'text-black' : 'text-red'"
           :min="0"
           :step="1"
           :disabled="'UNLIMITED' == this.type"

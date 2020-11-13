@@ -26,10 +26,10 @@
             selectedTokens.includes(token.address) ? 'check' : 'plus-small'
           "
           size="22"
-          class="text-white mr-2"
+          class=" mr-2"
         />
         <Token :address="token.address" class="mr-3" size="28" />
-        <div class="flex-auto text-white">
+        <div class="flex-auto ">
           {{ token.symbol }}
         </div>
       </a>

@@ -10,11 +10,7 @@
           class="border-top px-4 py-3 d-flex"
         >
           <div class="flex-auto">
-            <a
-              :href="_etherscanLink(tx.hash, 'tx')"
-              target="_blank"
-              class="text-white"
-            >
+            <a :href="_etherscanLink(tx.hash, 'tx')" target="_blank">
               <h5
                 v-text="tx.title || _shortenAddress(tx.hash)"
                 class="d-inline-block mb-1"
@@ -29,7 +25,7 @@
           />
         </div>
       </div>
-      <h5 class="text-white text-center p-4" v-else>
+      <h5 class=" text-center p-4" v-else>
         {{ $t('noPendingTransactions') }}
       </h5>
     </Block>

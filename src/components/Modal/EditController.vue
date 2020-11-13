@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t('editController')" class="text-white" />
+        <h3 v-text="$t('editController')" />
       </template>
       <div class="text-center m-4">
         <h5 class="px-4 mb-4 mx-auto overflow-hidden" style="max-width: 340px;">
@@ -14,7 +14,7 @@
         </div>
         <input
           class="h3 py-2 px-3 input text-center"
-          :class="isValid ? 'text-white' : 'text-red'"
+          :class="isValid ? 'text-black' : 'text-red'"
           v-model="input"
         />
       </div>

@@ -93,7 +93,7 @@ export default {
 
   ul > li > a {
     font-size: 16px;
-    color: $white;
+    // color: $white;
     display: block;
     padding: 10px 22px 12px;
 

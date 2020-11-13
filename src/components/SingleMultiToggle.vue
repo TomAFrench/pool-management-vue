@@ -1,14 +1,14 @@
 <template>
   <div class="d-flex flex-justify-center mt-4">
     <div
-      class="d-flex flex-justify-center py-2 text-white rounded-left-1 option"
+      class="d-flex flex-justify-center py-2 rounded-left-1 option"
       :class="{ selected: selected === multiAsset }"
       @click="onSelect(multiAsset)"
     >
       {{ $t('allPoolAssets') }}
     </div>
     <div
-      class="d-flex flex-justify-center py-2 text-white rounded-right-1 option"
+      class="d-flex flex-justify-center py-2 rounded-right-1 option"
       :class="{ selected: selected === singleAsset }"
       @click="onSelect(singleAsset)"
     >

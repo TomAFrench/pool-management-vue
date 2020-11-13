@@ -42,7 +42,7 @@
             <Token :address="token" :symbol="token" class="mr-3" />
             {{ _ticker(token) }}
             <a
-              class="d-block text-white p-1"
+              class="d-block  p-1"
               @click="
                 tokenModalOpen = true;
                 activeToken = i;
@@ -55,7 +55,7 @@
           <div class="column">
             <input
               class="input pool-input text-right"
-              :class="isWeightInputValid(token) ? 'text-white' : 'text-red'"
+              :class="isWeightInputValid(token) ? 'text-black' : 'text-red'"
               v-model="weights[token]"
               @input="handleWeightChange(token)"
             />
@@ -66,7 +66,7 @@
           <div class="column">
             <input
               class="input pool-input text-right"
-              :class="isAmountInputValid(token) ? 'text-white' : 'text-red'"
+              :class="isAmountInputValid(token) ? 'text-black' : 'text-red'"
               v-model="amounts[token]"
               @input="handleAmountChange(token)"
             />
@@ -88,7 +88,7 @@
           <div class="column-xs">
             <a
               v-if="tokens.length > 1"
-              class="d-flex flex-justify-end text-white"
+              class="d-flex flex-justify-end "
               @click="removeToken(token)"
             >
               <Icon name="close" />
@@ -106,7 +106,7 @@
     <div class="mb-4">
       <input
         class="input pool-input text-right"
-        :class="isSwapFeeInputValid() ? 'text-white' : 'text-red'"
+        :class="isSwapFeeInputValid() ? 'text-black' : 'text-red'"
         v-model="swapFee"
         placeholder="0.15"
         type="number"

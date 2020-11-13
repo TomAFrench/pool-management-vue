@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" v-if="pool.id">
     <UiModalForm>
       <template slot="header">
-        <h3 v-text="$t('addLiquidity')" class="text-white" />
+        <h3 v-text="$t('addLiquidity')" />
       </template>
       <div class="text-center m-4 mt-0">
         <Toggle
@@ -47,7 +47,7 @@
                   "
                 />
                 <Token :address="token.address" class="mr-2" size="20" />
-                <div v-text="_shorten(token.symbol, 12)" class="text-white" />
+                <div v-text="_shorten(token.symbol, 12)" />
               </div>
               <div class="column">
                 {{
@@ -71,7 +71,7 @@
                     v-model="amounts[token.checksum]"
                     v-if="isMultiAsset || activeToken === token.checksum"
                     class="input flex-auto text-right"
-                    :class="isInputValid(token) ? 'text-white' : 'text-red'"
+                    :class="isInputValid(token) ? 'text-black' : 'text-red'"
                     placeholder="0.0"
                     @input="handleChange(amounts[token.checksum], token)"
                   />
@@ -80,7 +80,7 @@
             </UiTableTr>
           </UiTable>
           <UiTable class="mt-4">
-            <UiTableTh class="text-left flex-items-center text-white">
+            <UiTableTh class="text-left flex-items-center">
               <div class="flex-auto">
                 {{ _shorten(pool.symbol, 12) }} {{ $t('amount') }}
               </div>

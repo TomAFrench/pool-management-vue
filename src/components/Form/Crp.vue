@@ -5,7 +5,7 @@
     </div>
     <div class="mb-4">
       <input
-        class="input pool-input text-right text-white"
+        class="input pool-input text-right "
         :value="tokenSymbol"
         @change="$emit('change-symbol', $event.target.value)"
         placeholder="BPT"
@@ -16,7 +16,7 @@
     </div>
     <div class="mb-4">
       <input
-        class="input pool-input text-right text-white"
+        class="input pool-input text-right "
         :value="tokenName"
         @change="$emit('change-name', $event.target.value)"
         placeholder="Balancer Smart Pool"
@@ -27,7 +27,7 @@
     </div>
     <div class="mb-4">
       <input
-        class="ml-2 input pool-input text-right text-white"
+        class="ml-2 input pool-input text-right "
         :value="initialSupply"
         type="number"
         :min="100"
@@ -46,24 +46,24 @@
           :checked="rights.canPauseSwapping"
           @change="$emit('toggle-right', 'canPauseSwapping')"
         >
-          <span v-text="$t('canPauseSwapping')" class="ml-2 text-white" />
+          <span v-text="$t('canPauseSwapping')" class="ml-2 " />
         </UiCheckbox>
         <UiCheckbox
           :checked="rights.canChangeSwapFee"
           @change="$emit('toggle-right', 'canChangeSwapFee')"
         >
-          <span v-text="$t('canChangeSwapFee')" class="ml-2 text-white" />
+          <span v-text="$t('canChangeSwapFee')" class="ml-2 " />
         </UiCheckbox>
         <UiCheckbox
           :checked="rights.canChangeWeights"
           @change="$emit('toggle-right', 'canChangeWeights')"
         >
-          <span v-text="$t('canChangeWeights')" class="ml-2 text-white" />
+          <span v-text="$t('canChangeWeights')" class="ml-2 " />
         </UiCheckbox>
         <div v-if="rights.canChangeWeights">
           <span v-text="$t('minimumUpdatePeriod')" />
           <input
-            class="ml-2 input pool-input text-right text-white"
+            class="ml-2 input pool-input text-right "
             type="number"
             :value="minimumWeightChangeBlockPeriod"
             :min="0"
@@ -76,12 +76,12 @@
           :checked="rights.canAddRemoveTokens"
           @change="$emit('toggle-right', 'canAddRemoveTokens')"
         >
-          <span v-text="$t('canAddRemoveTokens')" class="ml-2 text-white" />
+          <span v-text="$t('canAddRemoveTokens')" class="ml-2 " />
         </UiCheckbox>
         <div v-if="rights.canAddRemoveTokens">
           <span v-text="$t('addTokenTimelock')" />
           <input
-            class="ml-2 input pool-input text-right text-white"
+            class="ml-2 input pool-input text-right "
             type="number"
             :min="0"
             :step="10"
@@ -94,13 +94,13 @@
           :checked="rights.canWhitelistLPs"
           @change="$emit('toggle-right', 'canWhitelistLPs')"
         >
-          <span v-text="$t('canWhitelistLPs')" class="ml-2 text-white" />
+          <span v-text="$t('canWhitelistLPs')" class="ml-2 " />
         </UiCheckbox>
         <UiCheckbox
           :checked="rights.canChangeCap"
           @change="$emit('toggle-right', 'canChangeCap')"
         >
-          <span v-text="$t('canChangeCap')" class="ml-2 text-white" />
+          <span v-text="$t('canChangeCap')" class="ml-2 " />
         </UiCheckbox>
       </div>
     </div>

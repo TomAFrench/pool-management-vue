@@ -9,7 +9,7 @@
       <UiTableTr v-for="(token, i) in tokens" :key="token">
         <div class="flex-auto d-flex flex-items-center text-left d-flex">
           <Token :address="token" class="mr-2" size="20" />
-          <div class="text-white">{{ _ticker(token) }}</div>
+          <div>{{ _ticker(token) }}</div>
           <ButtonUnlock class="ml-2" :tokenAddress="token" />
         </div>
         <div class="column text-left">
@@ -28,14 +28,14 @@
           step="any"
           :class="
             web3.balances[token] >= parseFloat(startBalances[i])
-              ? 'text-white'
+              ? 'text-black'
               : 'text-red'
           "
           required
         />
       </UiTableTr>
     </UiTable>
-    <div class="m-4 p-3 border rounded-1 text-white">
+    <div class="m-4 p-3 border rounded-1 ">
       <VueSwitch v-model="autoPricing" class="mr-3" />
       {{ $t('calculateDeposits') }}
     </div>

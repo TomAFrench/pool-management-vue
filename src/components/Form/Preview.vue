@@ -31,7 +31,7 @@
     <UiTable>
       <UiTableTh>
         <div v-text="$t('swapFee')" class="flex-auto text-left" />
-        <div class="text-white" v-text="`${parseFloat(swapFee.toFixed(4))}%`" />
+        <div v-text="`${parseFloat(swapFee.toFixed(4))}%`" />
       </UiTableTh>
     </UiTable>
   </div>

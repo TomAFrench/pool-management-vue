@@ -92,7 +92,7 @@ export default {
 @import '../vars';
 
 .topic {
-  background-color: $blue-900;
+  background-color: $primary-button-background;
   color: $white;
   border: 0;
   border-radius: 14px;
@@ -101,7 +101,7 @@ export default {
   position: relative;
 
   button:hover {
-    background-color: $blue !important;
+    background-color: $primary-button-background-hover !important;
   }
 
   .topic-button {

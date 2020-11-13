@@ -1,7 +1,7 @@
 <template>
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <h3 class="m-4 mb-0 text-center">About</h3>
-    <div class="m-4 mb-0 p-4 border rounded-2 text-white">
+    <div class="m-4 mb-0 p-4 border rounded-2 ">
       <div class="d-flex">
         <span v-text="$t('version')" class="flex-auto text-gray mr-1" />
         {{ pkg.version

@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="close" style="max-width: 440px;">
     <UiModalForm>
       <template slot="header">
-        <h3 v-text="$t('selectToken')" class="text-white mb-4" />
+        <h3 v-text="$t('selectToken')" class=" mb-4" />
         <Search
           v-model="query"
           @input="handleQuery"
@@ -20,7 +20,7 @@
         <li v-for="(token, i) in tokens" :key="i">
           <a
             @click="selectToken(i)"
-            class="p-3 d-flex flex-items-center text-white border-bottom highlight"
+            class="p-3 d-flex flex-items-center  border-bottom highlight"
           >
             <div class="flex-auto d-flex flex-items-center">
               <Token :address="i" class="mr-2" />

@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t(title)" class="text-white" />
+        <h3 v-text="$t(title)" />
       </template>
       <div class="m-4 p-4 border rounded-2">
         <div class="mb-2">
@@ -15,7 +15,7 @@
           <input
             v-autofocus
             v-model="amount"
-            :class="isValid ? 'text-white' : 'text-red'"
+            :class="isValid ? 'text-black' : 'text-red'"
             :max="balance"
             type="number"
             step="any"
@@ -40,7 +40,7 @@
         >
           <input
             v-model="amount"
-            :class="isValid ? 'text-white' : 'text-red'"
+            :class="isValid ? 'text-black' : 'text-red'"
             type="number"
             step="any"
             class="flex-auto px-0"

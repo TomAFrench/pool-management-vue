@@ -59,7 +59,7 @@ const options = {
   },
   layout: {
     backgroundColor: 'transparent',
-    textColor: 'white'
+    textColor: 'black'
   },
   handleScroll: {
     mouseWheel: false
@@ -161,7 +161,7 @@ export default {
       } else {
         this.chart.removeSeries(this.series);
       }
-      const color = '#ffffff';
+      const color = '#008c73';
       if (this.activeTab === 'LIQUIDITY') {
         this.series = this.chart.addAreaSeries({
           lineColor: color,
@@ -218,12 +218,13 @@ export default {
   padding: 0 16px;
   border-radius: $border-radius $border-radius 0 0;
   font-size: 16px;
-  color: #fff;
+  color: #000;
   display: block;
   cursor: pointer;
 }
 
 .tab.active {
   background-color: $blue-900;
+  color: #fff;
 }
 </style>

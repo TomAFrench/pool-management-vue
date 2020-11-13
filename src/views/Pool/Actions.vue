@@ -1,5 +1,5 @@
 <template>
-  <div class="border rounded-1 panel-background p-4 text-white">
+  <div class="border rounded-1 panel-background p-4">
     <div
       v-if="bPool.metadata.rights.canChangeWeights"
       class="p-4 border rounded-1"

@@ -31,7 +31,7 @@ export default {
 .nav {
   ul > li > a {
     font-size: 16px;
-    color: $white;
+    // color: $white;
     display: block;
     padding: 24px 0 0;
   }

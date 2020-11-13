@@ -87,6 +87,7 @@ export default {
 
         &.router-link-exact-active {
           background-color: $blue-900;
+          color: #fff;
         }
       }
     }

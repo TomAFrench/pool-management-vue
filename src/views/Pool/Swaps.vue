@@ -19,7 +19,6 @@
           <div class="flex-auto text-left hide-sm hide-md hide-lg">
             <a
               :href="_etherscanLink(getTxHashFromId(swap.id), 'tx')"
-              class="text-white"
               target="_blank"
             >
               {{ $d(new Date(swap.timestamp * 1e3), 'long') }}
@@ -54,7 +53,7 @@
     </div>
     <div
       v-if="swaps.length === 0 && !loading"
-      class="border-top d-flex flex-items-center p-4 text-white"
+      class="border-top d-flex flex-items-center p-4"
       v-text="$t('emptyState')"
     />
   </UiTable>

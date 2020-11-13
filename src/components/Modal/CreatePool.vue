@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')">
     <UiModalForm @submit="handleSubmit">
       <template slot="header" v-if="stepTitles[step]">
-        <h3 class="text-white">
+        <h3>
           <span class="mr-2">{{ stepTitles[step] }}</span>
           <span
             v-if="step < lastStep"

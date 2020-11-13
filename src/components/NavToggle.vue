@@ -23,7 +23,7 @@ export default {
 
 .toggle {
   display: inline-block;
-  background-color: $secondary-button-background;
+  background-color: $panel-border;
   border-radius: 22px;
 
   .router-link {
@@ -31,12 +31,22 @@ export default {
     height: 44px;
     line-height: 40px;
     border-radius: 22px;
-    color: $secondary-button-text;
+    color: $secondary-button-background;
     padding: 0 24px 3px;
   }
 
+  .router-link:hover {
+    background-color: $secondary-button-background-hover !important;
+  }
+
   .active {
-    background-color: $panel-border !important;
+    background-color: $primary-button-background !important;
+    color: $primary-button-text;
+  }
+
+  .active:hover {
+    background-color: $primary-button-background-hover !important;
+    color: $primary-button-text;
   }
 }
 </style>

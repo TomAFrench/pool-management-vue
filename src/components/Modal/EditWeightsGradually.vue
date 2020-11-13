@@ -2,7 +2,7 @@
   <UiModal :open="open" @close="$emit('close')" style="max-width: 440px;">
     <UiModalForm @submit="handleSubmit">
       <template slot="header">
-        <h3 v-text="$t('gradualWeightUpdate')" class="text-white" />
+        <h3 v-text="$t('gradualWeightUpdate')" />
       </template>
       <UiTable class="m-4 mb-0">
         <UiTableTh>

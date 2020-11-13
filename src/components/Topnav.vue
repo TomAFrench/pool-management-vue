@@ -2,7 +2,7 @@
   <nav id="topnav" class="border-bottom position-fixed width-full">
     <div class="d-flex flex-items-center px-5" style="height: 78px;">
       <div class="flex-auto d-flex flex-items-center">
-        <!-- <a class="d-block d-xl-none text-white" @click="toggleSidebar">
+        <!-- <a class="d-block d-xl-none " @click="toggleSidebar">
           <Icon name="menu" size="28" class="mr-3" />
         </a> -->
         <NavToggle :items="links" />
@@ -18,7 +18,7 @@
             height="32"
           />
           <span
-            class="d-inline-block text-white"
+            class="d-inline-block "
             style="letter-spacing: 1px; font-size: 16px;"
             v-text="'Balancer'"
           />

@@ -8,10 +8,7 @@
         <UiButton v-text="$t('toggle')" @click="modalOpen.publicSwap = true" />
       </div>
       <div v-text="$t('publicSwap')" class="mb-2" />
-      <h5
-        v-text="bPool.metadata.publicSwap ? 'Enabled' : 'Disabled'"
-        class="text-white"
-      />
+      <h5 v-text="bPool.metadata.publicSwap ? 'Enabled' : 'Disabled'" />
     </div>
     <div
       v-if="bPool.metadata.rights.canChangeSwapFee"
@@ -21,7 +18,7 @@
         <UiButton v-text="$t('change')" @click="modalOpen.swapFee = true" />
       </div>
       <div v-text="$t('swapFee')" class="mb-2" />
-      <h5 v-text="_num(pool.swapFee, 'percent')" class="text-white" />
+      <h5 v-text="_num(pool.swapFee, 'percent')" />
     </div>
     <div
       v-if="bPool.metadata.rights.canChangeWeights"
@@ -68,7 +65,7 @@
           class="float-left d-flex flex-items-center mr-3"
         >
           <Token :address="token.checksum" class="mr-2" />
-          <span v-text="_ticker(token.checksum)" class="text-white" />
+          <span v-text="_ticker(token.checksum)" />
         </span>
       </div>
     </div>
@@ -80,7 +77,7 @@
         <UiButton v-text="$t('change')" @click="modalOpen.cap = true" />
       </div>
       <label v-text="$t('cap')" class="d-block mb-2" />
-      <div class="text-white">
+      <div>
         <div v-if="pool.bspCap === MAX" v-text="$t('unlimited')" />
         <div v-else v-text="_num(pool.bspCap)" />
       </div>
@@ -103,7 +100,7 @@
         <UiButton v-text="$t('change')" @click="modalOpen.controller = true" />
       </div>
       <label v-text="$t('controller')" class="d-block mb-2" />
-      <h5 v-text="pool.crpController" class="text-white" />
+      <h5 v-text="pool.crpController" />
     </div>
     <MessageError
       v-if="this.transactionReverted"
