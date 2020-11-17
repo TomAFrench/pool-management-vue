@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import { getInstance } from '@snapshot-labs/lock/plugins/vue';
 import { lsGet, lsRemove, lsSet } from '@/helpers/localStorage';
-import { sendTransaction } from '@/helpers/web3';
 import provider from '@/helpers/provider';
 
 const state = {
@@ -55,16 +53,16 @@ const getters = {
 };
 
 const actions = {
-  async processTransaction({ commit }, { params, title }) {
-    console.log('Send transaction', title, params);
-    const tx = await sendTransaction(getInstance().web3, params);
+  async processTransactions({ dispatch }, { transactions, title }) {
+    console.log('Send transaction', title, transactions);
+    const tx = await dispatch('sendGnosisTransactions', transactions);
 
-    console.log('Watch transaction', tx);
-    commit('watchTransaction', { ...tx, title });
+    // console.log('Watch transaction', tx);
+    // commit('watchTransaction', { ...tx, title });
 
-    const receipt = await provider.waitForTransaction(tx.hash, 1);
-    console.log('Confirm transaction', receipt);
-    commit('confirmTransaction', receipt);
+    // const receipt = await provider.waitForTransaction(tx.hash, 1);
+    // console.log('Confirm transaction', receipt);
+    // commit('confirmTransaction', receipt);
 
     return tx;
   },

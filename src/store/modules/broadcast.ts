@@ -9,7 +9,7 @@ import {
   shortenAddress
 } from '@/helpers/utils';
 import BigNumber from '@/helpers/bignumber';
-import { makeProxyTransaction } from '@/helpers/web3';
+import { makeGnosisTransaction } from '@/helpers/web3';
 import { setGoal } from '@/helpers/fathom';
 
 const mutations = {
@@ -223,37 +223,11 @@ const mutations = {
 };
 
 const actions = {
-  createProxy: async ({ commit, dispatch }) => {
-    commit('CREATE_PROXY_REQUEST');
-    try {
-      const params = [
-        'DSProxyRegistry',
-        config.addresses.dsProxyRegistry,
-        'build',
-        [],
-        {}
-      ];
-      const tx = await dispatch('processTransaction', {
-        params,
-        title: 'Create proxy'
-      });
-      setGoal('EV1XI0VM');
-      dispatch('notify', ['green', "You've successfully created a proxy"]);
-      dispatch('getProxy');
-      commit('CREATE_PROXY_SUCCESS');
-      return tx;
-    } catch (e) {
-      if (!e || isTxReverted(e)) return e;
-      dispatch('notify', ['red', i18n.tc('failureOops')]);
-      commit('CREATE_PROXY_FAILURE', e);
-    }
-  },
   createPool: async (
     { commit, dispatch, rootState },
     { tokens, balances, weights, swapFee }
   ) => {
     commit('CREATE_POOL_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       balances = tokens.map(token => {
         const amountInput = balances[token];
@@ -272,15 +246,16 @@ const actions = {
       swapFee = toWei(swapFee)
         .div(100)
         .toString();
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'create',
-        [config.addresses.bFactory, tokens, balances, weights, swapFee, true],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params, title: 'Create a pool' });
+        [config.addresses.bFactory, tokens, balances, weights, swapFee, true]
+      );
+      await dispatch('processTransactions', {
+        title: 'Create a pool',
+        transactions: [transaction]
+      });
       setGoal('MGYMGNXQ');
       dispatch('notify', ['green', "You've successfully created a pool"]);
       commit('CREATE_POOL_SUCCESS');
@@ -295,7 +270,6 @@ const actions = {
     { poolParams, crpParams, rights }
   ) => {
     commit('CREATE_SMART_POOL_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     const { poolTokenSymbol, poolTokenName, constituentTokens } = poolParams;
     let { tokenBalances, tokenWeights, swapFee } = poolParams;
     let { initialSupply } = crpParams;
@@ -336,7 +310,17 @@ const actions = {
         addTokenTimeLockInBlocks
       };
 
-      const underlyingParams = [
+      console.log(
+        'Create smart pool',
+        JSON.stringify([
+          config.addresses.crpFactory,
+          config.addresses.bFactory,
+          poolParams,
+          crpParams,
+          rights
+        ])
+      );
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'createSmartPool',
@@ -346,20 +330,12 @@ const actions = {
           poolParams,
           crpParams,
           rights
-        ],
-        {}
-      ];
-      console.log(
-        'Create smart pool',
-        dsProxyAddress,
-        JSON.stringify(underlyingParams)
+        ]
       );
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      const tx = await dispatch('processTransaction', {
-        params,
-        title: 'Create a smart pool'
+      await dispatch('processTransactions', {
+        title: 'Create a smart pool',
+        transactions: [transaction]
       });
-      await tx.wait(6);
       setGoal('H854WJCE');
       dispatch('notify', ['green', i18n.tc('successCreatePool')]);
       commit('CREATE_SMART_POOL_SUCCESS');
@@ -370,23 +346,20 @@ const actions = {
     }
   },
   joinPool: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, poolAmountOut, maxAmountsIn, isCrp = false }
   ) => {
     commit('JOIN_POOL_REQUEST');
     try {
-      const dsProxyAddress = rootState.web3.dsProxyAddress;
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         isCrp ? 'joinSmartPool' : 'joinPool',
-        [poolAddress, poolAmountOut, maxAmountsIn],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', {
-        params,
-        title: 'Add liquidity'
+        [poolAddress, poolAmountOut, maxAmountsIn]
+      );
+      await dispatch('processTransactions', {
+        title: 'Add liquidity',
+        transactions: [transaction]
       });
       await Promise.all([
         dispatch('getBalances'),
@@ -402,23 +375,20 @@ const actions = {
     }
   },
   joinswapExternAmountIn: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, tokenInAddress, tokenAmountIn, minPoolAmountOut }
   ) => {
     commit('JOINSWAP_EXTERN_AMOUNT_REQUEST');
     try {
-      const dsProxyAddress = rootState.web3.dsProxyAddress;
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'joinswapExternAmountIn',
-        [poolAddress, tokenInAddress, tokenAmountIn, minPoolAmountOut],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', {
-        params,
-        title: 'Add liquidity'
+        [poolAddress, tokenInAddress, tokenAmountIn, minPoolAmountOut]
+      );
+      await dispatch('processTransactions', {
+        title: 'Add liquidity',
+        transactions: [transaction]
       });
       await Promise.all([
         dispatch('getBalances'),
@@ -439,16 +409,15 @@ const actions = {
   ) => {
     commit('EXIT_POOL_REQUEST');
     try {
-      const params = [
+      const transaction = makeGnosisTransaction(
         'BPool',
         poolAddress,
         'exitPool',
-        [toWei(poolAmountIn).toString(), minAmountsOut],
-        {}
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: 'Remove liquidity'
+        [toWei(poolAmountIn).toString(), minAmountsOut]
+      );
+      await dispatch('processTransactions', {
+        title: 'Remove liquidity',
+        transactions: [transaction]
       });
       await Promise.all([
         dispatch('getBalances'),
@@ -469,16 +438,15 @@ const actions = {
   ) => {
     commit('EXITSWAP_POOL_AMOUNT_IN_REQUEST');
     try {
-      const params = [
+      const transaction = makeGnosisTransaction(
         'BPool',
         poolAddress,
         'exitswapPoolAmountIn',
-        [tokenOutAddress, toWei(poolAmountIn).toString(), minTokenAmountOut],
-        {}
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: 'Remove liquidity'
+        [tokenOutAddress, toWei(poolAmountIn).toString(), minTokenAmountOut]
+      );
+      await dispatch('processTransactions', {
+        title: 'Remove liquidity',
+        transactions: [transaction]
       });
       await Promise.all([
         dispatch('getBalances'),
@@ -493,22 +461,18 @@ const actions = {
       commit('EXITSWAP_POOL_AMOUNT_IN_FAILURE', e);
     }
   },
-  setPublicSwap: async (
-    { commit, dispatch, rootState },
-    { poolAddress, publicSwap }
-  ) => {
+  setPublicSwap: async ({ commit, dispatch }, { poolAddress, publicSwap }) => {
     commit('SET_PUBLIC_SWAP_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'setPublicSwap',
-        [poolAddress, publicSwap],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, publicSwap]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('SET_PUBLIC_SWAP_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -516,25 +480,21 @@ const actions = {
       commit('SET_PUBLIC_SWAP_FAILURE', e);
     }
   },
-  setSwapFee: async (
-    { commit, dispatch, rootState },
-    { poolAddress, newFee }
-  ) => {
+  setSwapFee: async ({ commit, dispatch }, { poolAddress, newFee }) => {
     commit('SET_SWAP_FEE_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       newFee = toWei(newFee)
         .div(100)
         .toString();
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'setSwapFee',
-        [poolAddress, newFee],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, newFee]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       dispatch('notify', ['green', "You've successfully changed the swap fee"]);
       commit('SET_SWAP_FEE_SUCCESS');
     } catch (e) {
@@ -546,16 +506,15 @@ const actions = {
   pokeWeights: async ({ commit, dispatch }, { poolAddress }) => {
     commit('POKE_WEIGHTS_REQUEST');
     try {
-      const params = [
+      const transaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
         poolAddress,
         'pokeWeights',
-        [],
-        {}
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: 'Poke weights'
+        []
+      );
+      await dispatch('processTransactions', {
+        title: 'Poke weights',
+        transactions: [transaction]
       });
 
       dispatch('notify', ['green', i18n.tc('successPokeWeights')]);
@@ -567,21 +526,20 @@ const actions = {
     }
   },
   setController: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, newController }
   ) => {
     commit('SET_CONTROLLER_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'setController',
-        [poolAddress, newController],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, newController]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('SET_CONTROLLER_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -594,7 +552,6 @@ const actions = {
     { poolAddress, token, newWeight, tokenAmountIn }
   ) => {
     commit('INCREASE_WEIGHT_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       newWeight = toWei(newWeight)
         .div(2)
@@ -604,15 +561,15 @@ const actions = {
       tokenAmountIn = denormalizeBalance(tokenAmountIn, decimals)
         .integerValue(BigNumber.ROUND_DOWN)
         .toString();
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'increaseWeight',
-        [poolAddress, token, newWeight, tokenAmountIn],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, token, newWeight, tokenAmountIn]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('INCREASE_WEIGHT_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -621,25 +578,24 @@ const actions = {
     }
   },
   decreaseWeight: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, token, newWeight, poolAmountIn }
   ) => {
     commit('DECREASE_WEIGHT_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       newWeight = toWei(newWeight)
         .div(2)
         .toString();
       poolAmountIn = toWei(poolAmountIn);
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'decreaseWeight',
-        [poolAddress, token, newWeight, poolAmountIn.toString()],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, token, newWeight, poolAmountIn.toString()]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('DECREASE_WEIGHT_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -648,26 +604,25 @@ const actions = {
     }
   },
   updateWeightsGradually: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, tokens, newWeights, startBlock, endBlock }
   ) => {
     commit('UPDATE_WEIGHTS_GRADUALLY_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       newWeights = tokens.map(token => {
         return toWei(newWeights[token])
           .div(2)
           .toString();
       });
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'updateWeightsGradually',
-        [poolAddress, newWeights, startBlock, endBlock],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, newWeights, startBlock, endBlock]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('UPDATE_WEIGHTS_GRADUALLY_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -675,20 +630,19 @@ const actions = {
       commit('UPDATE_WEIGHTS_GRADUALLY_FAILURE', e);
     }
   },
-  setCap: async ({ commit, dispatch, rootState }, { poolAddress, newCap }) => {
+  setCap: async ({ commit, dispatch }, { poolAddress, newCap }) => {
     commit('SET_CAP_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       newCap = toWei(newCap).toString();
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'setCap',
-        [poolAddress, newCap],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, newCap]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('SET_CAP_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -701,7 +655,6 @@ const actions = {
     { poolAddress, token, balance, denormalizedWeight }
   ) => {
     commit('COMMIT_ADD_TOKEN_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
       const tokenMetadata = rootState.web3.tokenMetadata[token];
       const decimals = tokenMetadata ? tokenMetadata.decimals : null;
@@ -711,15 +664,15 @@ const actions = {
       denormalizedWeight = toWei(denormalizedWeight)
         .div(2)
         .toString();
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'commitAddToken',
-        [poolAddress, token, balance, denormalizedWeight],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, token, balance, denormalizedWeight]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('COMMIT_ADD_TOKEN_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -728,21 +681,20 @@ const actions = {
     }
   },
   applyAddToken: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, token, tokenAmountIn }
   ) => {
     commit('APPLY_ADD_TOKEN_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'applyAddToken',
-        [poolAddress, token, tokenAmountIn],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, token, tokenAmountIn]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('APPLY_ADD_TOKEN_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -751,25 +703,24 @@ const actions = {
     }
   },
   removeToken: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, token, poolAmountIn }
   ) => {
     commit('REMOVE_TOKEN_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     console.log(`poolAddress = ${poolAddress}`);
     console.log(`token = ${token}`);
     console.log(`poolAmountIn = ${poolAmountIn}`);
 
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'removeToken',
-        [poolAddress, token, poolAmountIn.toString()],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, token, poolAmountIn.toString()]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('REMOVE_TOKEN_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -778,21 +729,20 @@ const actions = {
     }
   },
   whitelistLiquidityProvider: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, provider }
   ) => {
     commit('WHITELIST_LP_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'whitelistLiquidityProvider',
-        [poolAddress, provider],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, provider]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('WHITELIST_LP_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -801,21 +751,20 @@ const actions = {
     }
   },
   removeWhitelistedLiquidityProvider: async (
-    { commit, dispatch, rootState },
+    { commit, dispatch },
     { poolAddress, provider }
   ) => {
     commit('REMOVE_WHITELISTED_LP_REQUEST');
-    const dsProxyAddress = rootState.web3.dsProxyAddress;
     try {
-      const underlyingParams = [
+      const transaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'removeWhitelistedLiquidityProvider',
-        [poolAddress, provider],
-        {}
-      ];
-      const params = makeProxyTransaction(dsProxyAddress, underlyingParams);
-      await dispatch('processTransaction', { params });
+        [poolAddress, provider]
+      );
+      await dispatch('processTransactions', {
+        transactions: [transaction]
+      });
       commit('REMOVE_WHITELISTED_LP_SUCCESS');
     } catch (e) {
       if (!e || isTxReverted(e)) return e;
@@ -829,16 +778,13 @@ const actions = {
     const tokenMetadata = rootState.web3.tokenMetadata[token];
     const symbol = tokenMetadata ? tokenMetadata.symbol : shortenAddress(token);
     try {
-      const params = [
-        'TestToken',
-        token,
-        'approve',
-        [spender, MAX_UINT.toString()],
-        {}
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: `Approve ${symbol}`
+      const transaction = makeGnosisTransaction('TestToken', token, 'approve', [
+        spender,
+        MAX_UINT.toString()
+      ]);
+      await dispatch('processTransactions', {
+        title: `Approve ${symbol}`,
+        transactions: [transaction]
       });
       dispatch('getAllowances', [token]);
       setGoal('R4TD1ELX');
@@ -853,16 +799,16 @@ const actions = {
   wrap: async ({ commit, dispatch }, amount) => {
     commit('WRAP_ETH_REQUEST');
     try {
-      const params = [
+      const transaction = makeGnosisTransaction(
         'Weth',
         config.addresses.weth,
         'deposit',
         [],
-        { value: toWei(amount).toString() }
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: 'Wrap ETH to WETH'
+        toWei(amount).toString()
+      );
+      await dispatch('processTransactions', {
+        title: 'Wrap ETH to WETH',
+        transactions: [transaction]
       });
       await dispatch('getBalances');
       setGoal('KFAFBADQ');
@@ -880,16 +826,15 @@ const actions = {
   unwrap: async ({ commit, dispatch }, amount) => {
     commit('UNWRAP_ETH_REQUEST');
     try {
-      const params = [
+      const transaction = makeGnosisTransaction(
         'Weth',
         config.addresses.weth,
         'withdraw',
-        [toWei(amount).toString()],
-        {}
-      ];
-      await dispatch('processTransaction', {
-        params,
-        title: 'Unwrap WETH to ETH'
+        [toWei(amount).toString()]
+      );
+      await dispatch('processTransactions', {
+        title: 'Unwrap WETH to ETH',
+        transactions: [transaction]
       });
       await dispatch('getBalances');
       setGoal('XSBEFNTT');

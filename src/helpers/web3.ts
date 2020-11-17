@@ -4,6 +4,7 @@ import abi from '@/helpers/abi';
 import { GAS_LIMIT_BUFFER, isTxRejected, logRevertedTx } from '@/helpers/utils';
 import provider from '@/helpers/provider';
 import { Interface } from '@ethersproject/abi';
+import { Transaction } from '@gnosis.pm/safe-apps-sdk';
 
 export async function sendTransaction(
   web3,
@@ -34,11 +35,18 @@ export async function sendTransaction(
   }
 }
 
-export function makeProxyTransaction(
-  dsProxy,
-  [contractType, contractAddress, action, params, overrides]: any
-) {
+export function makeGnosisTransaction(
+  contractType: string,
+  contractAddress: string,
+  action: string,
+  params: any[],
+  value = '0'
+): Transaction {
   const iface = new Interface(abi[contractType]);
   const data = iface.encodeFunctionData(action, params);
-  return ['DSProxy', dsProxy, 'execute', [contractAddress, data], overrides];
+  return {
+    to: contractAddress,
+    data,
+    value
+  };
 }

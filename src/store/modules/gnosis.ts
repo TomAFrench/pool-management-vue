@@ -26,6 +26,9 @@ const actions = {
     await dispatch('loadAccount');
     await dispatch('loadWeb3');
     commit('ON_SAFE_INFO_SUCCESS', payload);
+  },
+  sendGnosisTransactions: async (_, { transactions }) => {
+    state.appsSdk.sendTransactions(transactions);
   }
 };
 
