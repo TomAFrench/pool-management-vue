@@ -68,11 +68,6 @@
       </div> -->
     </div>
     <portal to="modal">
-      <ModalAccount
-        :open="modalOpen.account"
-        @close="modalOpen.account = false"
-        @login="handleLogin"
-      />
       <ModalActivity
         :open="modalOpen.activity"
         @close="modalOpen.activity = false"
@@ -90,7 +85,6 @@ export default {
     return {
       loading: false,
       modalOpen: {
-        account: false,
         activity: false
       }
     };
