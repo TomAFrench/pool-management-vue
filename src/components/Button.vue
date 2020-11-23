@@ -35,7 +35,6 @@ export default {
   computed: {
     step() {
       if (this.loading || this.isLoading) return 'loading';
-      if (this.requireLogin && !this.$auth.isAuthenticated) return 'login';
       if (this.disabled) return false;
       return false;
     },
