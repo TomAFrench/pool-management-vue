@@ -1,8 +1,5 @@
 import Vue from 'vue';
-import { getInstance } from '@snapshot-labs/lock/plugins/vue';
-import { Web3Provider } from '@ethersproject/providers';
 import { Contract } from '@ethersproject/contracts';
-import { AddressZero } from '@ethersproject/constants';
 import { Interface } from '@ethersproject/abi';
 import store from '@/store';
 import abi from '@/helpers/abi';
@@ -24,10 +21,8 @@ const state = {
   blockNumber: 0,
   account: null,
   name: null,
-  dsProxyAddress: null,
   active: false,
   balances: {},
-  allowances: {},
   tokenMetadata: {}
 };
 
@@ -37,10 +32,8 @@ const mutations = {
     Vue.set(_state, 'injectedChainId', null);
     Vue.set(_state, 'account', null);
     Vue.set(_state, 'name', null);
-    Vue.set(_state, 'dsProxyAddress', null);
     Vue.set(_state, 'active', false);
     Vue.set(_state, 'balances', {});
-    Vue.set(_state, 'allowances', {});
     console.debug('LOGOUT');
   },
   LOAD_TOKEN_METADATA_REQUEST() {
@@ -117,34 +110,8 @@ const mutations = {
   GET_BALANCES_FAILURE(_state, payload) {
     console.debug('GET_BALANCES_FAILURE', payload);
   },
-  GET_ALLOWANCES_REQUEST() {
-    console.debug('GET_ALLOWANCES_REQUEST');
-  },
-  GET_ALLOWANCES_SUCCESS(_state, payload) {
-    for (const address in payload) {
-      if (!_state.allowances.address) {
-        Vue.set(_state.allowances, address, {});
-      }
-      for (const spender in payload[address]) {
-        const allowance = payload[address][spender];
-        Vue.set(_state.allowances[address], spender, allowance);
-      }
-    }
-    console.debug('GET_ALLOWANCES_SUCCESS');
-  },
-  GET_ALLOWANCES_FAILURE(_state, payload) {
-    console.debug('GET_ALLOWANCES_FAILURE', payload);
-  },
   GET_PROXY_REQUEST() {
     console.debug('GET_PROXY_REQUEST');
-  },
-  GET_PROXY_SUCCESS(_state, payload) {
-    const proxyAddress = payload === AddressZero ? '' : payload;
-    Vue.set(_state, 'dsProxyAddress', proxyAddress);
-    console.debug('GET_PROXY_SUCCESS');
-  },
-  GET_PROXY_FAILURE(_state, payload) {
-    console.debug('GET_PROXY_FAILURE', payload);
   },
   GET_BLOCK_SUCCESS(_state, blockNumber) {
     Vue.set(_state, 'blockNumber', blockNumber);
@@ -153,16 +120,6 @@ const mutations = {
 };
 
 const actions = {
-  login: async ({ dispatch, commit }, connector = 'injected') => {
-    //   commit('SET', { authLoading: true });
-    //   auth = getInstance();
-    //   await auth.login(connector);
-    //   if (auth.provider) {
-    //     auth.web3 = new Web3Provider(auth.provider);
-    //     await dispatch('loadWeb3');
-    //   }
-    //   commit('SET', { authLoading: false });
-  },
   logout: async ({ commit }) => {
     Vue.prototype.$auth.logout();
     commit('LOGOUT');
@@ -274,10 +231,8 @@ const actions = {
     if (!state.account) return;
     // @ts-ignore
     const tokens = Object.entries(config.tokens).map(token => token[1].address);
-    await dispatch('getProxy');
     await Promise.all([
       dispatch('getBalances', tokens),
-      dispatch('getAllowances', tokens),
       dispatch('getUserPoolShares')
     ]);
   },
@@ -363,69 +318,6 @@ const actions = {
       return balances;
     } catch (e) {
       commit('GET_BALANCES_FAILURE', e);
-      return Promise.reject();
-    }
-  },
-  getAllowances: async ({ commit }, tokens) => {
-    commit('GET_ALLOWANCES_REQUEST');
-    const spender: any = state.dsProxyAddress;
-    if (!spender) return;
-    const address = state.account;
-    const promises: any = [];
-    const multi = new Contract(
-      config.addresses.multicall,
-      abi['Multicall'],
-      provider
-    );
-    const calls = [];
-    const testToken = new Interface(abi.TestToken);
-    tokens.forEach(token => {
-      calls.push([
-        // @ts-ignore
-        token,
-        // @ts-ignore
-        testToken.encodeFunctionData('allowance', [address, spender])
-      ]);
-    });
-    promises.push(multi.aggregate(calls));
-    const allowances: any = {};
-    try {
-      const [, response] = await multi.aggregate(calls);
-      let i = 0;
-      response.forEach(value => {
-        if (tokens && tokens[i]) {
-          const tokenAllowanceNumber = testToken.decodeFunctionResult(
-            'allowance',
-            value
-          );
-          if (!allowances[tokens[i]]) {
-            allowances[tokens[i]] = {};
-          }
-          allowances[tokens[i]][spender] = tokenAllowanceNumber.toString();
-        }
-        i++;
-      });
-      commit('GET_ALLOWANCES_SUCCESS', allowances);
-      return allowances;
-    } catch (e) {
-      commit('GET_ALLOWANCES_FAILURE', e);
-      return Promise.reject();
-    }
-  },
-  getProxy: async ({ commit }) => {
-    commit('GET_PROXY_REQUEST');
-    const address = state.account;
-    try {
-      const dsProxyRegistryContract = new Contract(
-        config.addresses.dsProxyRegistry,
-        abi['DSProxyRegistry'],
-        provider
-      );
-      const proxy = await dsProxyRegistryContract.proxies(address);
-      commit('GET_PROXY_SUCCESS', proxy);
-      return proxy;
-    } catch (e) {
-      commit('GET_PROXY_FAILURE', e);
       return Promise.reject();
     }
   }

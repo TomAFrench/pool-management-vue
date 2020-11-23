@@ -2,8 +2,8 @@
   "network": "homestead",
   "chainId": 1,
   "defaultPrecision": 2,
-  "rpcUrl": "https://eth-mainnet.alchemyapi.io/v2/Q08AP-nlA-yUiQnIiAVlyWK4tbXjRMmD",
-  "wsUrl": "wss://eth-mainnet.ws.alchemyapi.io/v2/Q08AP-nlA-yUiQnIiAVlyWK4tbXjRMmD",
+  "rpcUrl": "https://eth-mainnet.alchemyapi.io/v2/B7pp7tX3sRIsr4E9Smag-9HA-KKsv2St",
+  "wsUrl": "wss://eth-mainnet.ws.alchemyapi.io/v2/B7pp7tX3sRIsr4E9Smag-9HA-KKsv2St",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-beta",
   "explorer": "https://etherscan.io",
   "addresses": {

@@ -69,7 +69,7 @@
           {{ $t('cancel') }}
         </UiButton>
         <UiButton
-          :disabled="step !== 1 || loading || poolAmountIn > allowance"
+          :disabled="step !== 1 || loading"
           :loading="loading"
           class="button-primary mx-1"
         >
@@ -90,7 +90,6 @@ export default {
   data() {
     return {
       step: 0,
-      allowance: 0,
       loading: false,
       pendingRemove: '',
       pendingWeight: 0
@@ -114,7 +113,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['removeToken', 'getAllowances']),
+    ...mapActions(['removeToken']),
     async handleSubmit() {
       this.loading = true;
       await this.removeToken({
@@ -129,10 +128,6 @@ export default {
       this.pendingRemove = tokenAddress;
       this.pendingWeight = tokenWeight;
       this.step = 1;
-      const allowances = await this.getAllowances([this.pool.getBptAddress()]);
-      this.allowance = parseInt(
-        allowances[this.pool.getBptAddress()][this.web3.dsProxyAddress]
-      );
     }
   }
 };

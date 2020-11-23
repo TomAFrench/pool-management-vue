@@ -61,7 +61,7 @@ import {
   calcSingleInGivenWeightIncrease,
   calcPoolInGivenWeightDecrease
 } from '@/helpers/math';
-import { bnum, toWei, scale, isLocked } from '@/helpers/utils';
+import { bnum, toWei, scale } from '@/helpers/utils';
 
 export default {
   props: ['open', 'pool', 'defaultValue'],
@@ -122,13 +122,7 @@ export default {
       if (!this.tokenToSpend) {
         return false;
       }
-      return isLocked(
-        this.web3.allowances,
-        this.tokenToSpend,
-        this.web3.dsProxyAddress,
-        this.amountToSpend,
-        this.web3.tokenMetadata[this.tokenToSpend].decimals
-      );
+      return true;
     },
     isWeightIncrease() {
       const weight =

@@ -118,12 +118,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'loadTokenMetadata',
-      'loadPricesByAddress',
-      'getBalances',
-      'getAllowances'
-    ]),
+    ...mapActions(['loadTokenMetadata', 'loadPricesByAddress', 'getBalances']),
     selectToken(token) {
       if (this.isDisabled(token)) {
         return;
@@ -147,8 +142,7 @@ export default {
       await Promise.all([
         this.loadTokenMetadata([address]),
         this.loadPricesByAddress([address]),
-        this.getBalances([address]),
-        this.getAllowances([address])
+        this.getBalances([address])
       ]);
       this.loading = false;
     },

@@ -11,6 +11,7 @@ import {
 import BigNumber from '@/helpers/bignumber';
 import { makeGnosisTransaction } from '@/helpers/web3';
 import { setGoal } from '@/helpers/fathom';
+import { AddressZero } from '@ethersproject/constants';
 
 const mutations = {
   CREATE_PROXY_REQUEST() {
@@ -774,7 +775,7 @@ const actions = {
   },
   approve: async ({ commit, dispatch, rootState }, token) => {
     commit('APPROVE_REQUEST');
-    const spender = rootState.web3.dsProxyAddress;
+    const spender = AddressZero; // dsProxy
     const tokenMetadata = rootState.web3.tokenMetadata[token];
     const symbol = tokenMetadata ? tokenMetadata.symbol : shortenAddress(token);
     try {
@@ -786,7 +787,6 @@ const actions = {
         title: `Approve ${symbol}`,
         transactions: [transaction]
       });
-      dispatch('getAllowances', [token]);
       setGoal('R4TD1ELX');
       dispatch('notify', ['green', `You've successfully unlocked ${symbol}`]);
       commit('APPROVE_SUCCESS');

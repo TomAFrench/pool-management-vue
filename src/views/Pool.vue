@@ -113,7 +113,6 @@ export default {
   methods: {
     ...mapActions([
       'getBalances',
-      'getAllowances',
       'getPoolBalances',
       'loadTokenMetadata',
       'loadPricesByAddress'
@@ -145,7 +144,6 @@ export default {
             ...this.pool.tokensList,
             getAddress(this.bPool.getBptAddress())
           ]),
-          this.getAllowances(this.pool.tokensList),
           this.getPoolBalances({
             poolAddress: this.id,
             tokens: this.pool.tokensList

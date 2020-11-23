@@ -30,7 +30,7 @@ export default {
     queryMyPools() {
       return {
         where: {
-          crpController: this.web3.dsProxyAddress
+          crpController: this.web3.account
         }
       };
     }
