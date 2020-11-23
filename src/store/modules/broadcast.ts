@@ -1,17 +1,9 @@
 import config from '@/config';
 import i18n from '@/i18n';
-import {
-  bnum,
-  denormalizeBalance,
-  MAX_UINT,
-  toWei,
-  isTxReverted,
-  shortenAddress
-} from '@/helpers/utils';
+import { bnum, denormalizeBalance, toWei, isTxReverted } from '@/helpers/utils';
 import BigNumber from '@/helpers/bignumber';
 import { makeGnosisTransaction } from '@/helpers/web3';
 import { setGoal } from '@/helpers/fathom';
-import { AddressZero } from '@ethersproject/constants';
 
 const mutations = {
   CREATE_PROXY_REQUEST() {
@@ -247,7 +239,13 @@ const actions = {
       swapFee = toWei(swapFee)
         .div(100)
         .toString();
-      const transaction = makeGnosisTransaction(
+      const approvalTransactions = tokens.map(token =>
+        makeGnosisTransaction('TestToken', token, 'approve', [
+          config.addresses.bActions,
+          balances[token]
+        ])
+      );
+      const createPoolTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'create',
@@ -255,7 +253,7 @@ const actions = {
       );
       await dispatch('processTransactions', {
         title: 'Create a pool',
-        transactions: [transaction]
+        transactions: [...approvalTransactions, createPoolTransaction]
       });
       setGoal('MGYMGNXQ');
       dispatch('notify', ['green', "You've successfully created a pool"]);
@@ -321,7 +319,13 @@ const actions = {
           rights
         ])
       );
-      const transaction = makeGnosisTransaction(
+      const approvalTransactions = constituentTokens.map(token =>
+        makeGnosisTransaction('TestToken', token, 'approve', [
+          config.addresses.bActions,
+          tokenBalances[token]
+        ])
+      );
+      const createPoolTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'createSmartPool',
@@ -335,7 +339,7 @@ const actions = {
       );
       await dispatch('processTransactions', {
         title: 'Create a smart pool',
-        transactions: [transaction]
+        transactions: [...approvalTransactions, createPoolTransaction]
       });
       setGoal('H854WJCE');
       dispatch('notify', ['green', i18n.tc('successCreatePool')]);
@@ -381,7 +385,13 @@ const actions = {
   ) => {
     commit('JOINSWAP_EXTERN_AMOUNT_REQUEST');
     try {
-      const transaction = makeGnosisTransaction(
+      const approvalTransaction = makeGnosisTransaction(
+        'TestToken',
+        tokenInAddress,
+        'approve',
+        [config.addresses.bActions, tokenAmountIn]
+      );
+      const addLiquidityTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'joinswapExternAmountIn',
@@ -389,7 +399,7 @@ const actions = {
       );
       await dispatch('processTransactions', {
         title: 'Add liquidity',
-        transactions: [transaction]
+        transactions: [approvalTransaction, addLiquidityTransaction]
       });
       await Promise.all([
         dispatch('getBalances'),
@@ -562,14 +572,20 @@ const actions = {
       tokenAmountIn = denormalizeBalance(tokenAmountIn, decimals)
         .integerValue(BigNumber.ROUND_DOWN)
         .toString();
-      const transaction = makeGnosisTransaction(
+      const approvalTransaction = makeGnosisTransaction(
+        'TestToken',
+        token,
+        'approve',
+        [config.addresses.bActions, tokenAmountIn]
+      );
+      const increaseWeightTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'increaseWeight',
         [poolAddress, token, newWeight, tokenAmountIn]
       );
       await dispatch('processTransactions', {
-        transactions: [transaction]
+        transactions: [approvalTransaction, increaseWeightTransaction]
       });
       commit('INCREASE_WEIGHT_SUCCESS');
     } catch (e) {
@@ -588,14 +604,20 @@ const actions = {
         .div(2)
         .toString();
       poolAmountIn = toWei(poolAmountIn);
-      const transaction = makeGnosisTransaction(
+      const approvalTransaction = makeGnosisTransaction(
+        'TestToken',
+        poolAddress,
+        'approve',
+        [config.addresses.bActions, poolAmountIn.toString()]
+      );
+      const decreaseWeightTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'decreaseWeight',
         [poolAddress, token, newWeight, poolAmountIn.toString()]
       );
       await dispatch('processTransactions', {
-        transactions: [transaction]
+        transactions: [approvalTransaction, decreaseWeightTransaction]
       });
       commit('DECREASE_WEIGHT_SUCCESS');
     } catch (e) {
@@ -687,14 +709,20 @@ const actions = {
   ) => {
     commit('APPLY_ADD_TOKEN_REQUEST');
     try {
-      const transaction = makeGnosisTransaction(
+      const approvalTransaction = makeGnosisTransaction(
+        'TestToken',
+        token,
+        'approve',
+        [config.addresses.bActions, tokenAmountIn]
+      );
+      const applyAddTokenTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'applyAddToken',
         [poolAddress, token, tokenAmountIn]
       );
       await dispatch('processTransactions', {
-        transactions: [transaction]
+        transactions: [approvalTransaction, applyAddTokenTransaction]
       });
       commit('APPLY_ADD_TOKEN_SUCCESS');
     } catch (e) {
@@ -713,14 +741,20 @@ const actions = {
     console.log(`poolAmountIn = ${poolAmountIn}`);
 
     try {
-      const transaction = makeGnosisTransaction(
+      const approvalTransaction = makeGnosisTransaction(
+        'TestToken',
+        poolAddress,
+        'approve',
+        [config.addresses.bActions, poolAmountIn]
+      );
+      const removeTokenTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         'removeToken',
         [poolAddress, token, poolAmountIn.toString()]
       );
       await dispatch('processTransactions', {
-        transactions: [transaction]
+        transactions: [approvalTransaction, removeTokenTransaction]
       });
       commit('REMOVE_TOKEN_SUCCESS');
     } catch (e) {
@@ -771,29 +805,6 @@ const actions = {
       if (!e || isTxReverted(e)) return e;
       dispatch('notify', ['red', i18n.tc('failureOops')]);
       commit('REMOVE_WHITELISTED_LP_FAILURE', e);
-    }
-  },
-  approve: async ({ commit, dispatch, rootState }, token) => {
-    commit('APPROVE_REQUEST');
-    const spender = AddressZero; // dsProxy
-    const tokenMetadata = rootState.web3.tokenMetadata[token];
-    const symbol = tokenMetadata ? tokenMetadata.symbol : shortenAddress(token);
-    try {
-      const transaction = makeGnosisTransaction('TestToken', token, 'approve', [
-        spender,
-        MAX_UINT.toString()
-      ]);
-      await dispatch('processTransactions', {
-        title: `Approve ${symbol}`,
-        transactions: [transaction]
-      });
-      setGoal('R4TD1ELX');
-      dispatch('notify', ['green', `You've successfully unlocked ${symbol}`]);
-      commit('APPROVE_SUCCESS');
-    } catch (e) {
-      if (!e || isTxReverted(e)) return Promise.reject();
-      dispatch('notify', ['red', i18n.tc('failureOops')]);
-      commit('APPROVE_FAILURE', e);
     }
   },
   wrap: async ({ commit, dispatch }, amount) => {

@@ -32,7 +32,7 @@ export default {
     async handleSubmit() {
       this.loading = true;
       try {
-        await this.approve(this.tokenAddress);
+        // await this.approve(this.tokenAddress);
         this.$emit('approved', true);
       } catch (e) {
         console.log(e);
