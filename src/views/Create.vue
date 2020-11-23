@@ -142,9 +142,6 @@
       class="mt-4"
     />
     <Button
-      :requireLogin="true"
-      :requireProxy="true"
-      :requireApprovals="requiredApprovals"
       :loading="loading"
       :disabled="validationError || !checkboxAccept"
       @submit="confirmModalOpen = true"

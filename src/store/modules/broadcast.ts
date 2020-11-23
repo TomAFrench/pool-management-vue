@@ -6,15 +6,6 @@ import { makeGnosisTransaction } from '@/helpers/web3';
 import { setGoal } from '@/helpers/fathom';
 
 const mutations = {
-  CREATE_PROXY_REQUEST() {
-    console.debug('CREATE_PROXY_REQUEST');
-  },
-  CREATE_PROXY_SUCCESS() {
-    console.debug('CREATE_PROXY_SUCCESS');
-  },
-  CREATE_PROXY_FAILURE(_state, payload) {
-    console.debug('CREATE_PROXY_FAILURE', payload);
-  },
   CREATE_POOL_REQUEST() {
     console.debug('CREATE_POOL_REQUEST');
   },

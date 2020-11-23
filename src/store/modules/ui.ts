@@ -8,7 +8,6 @@ const state = {
   address: '',
   balances: {},
   pools: [],
-  proxy: '',
   sidebarIsOpen: false,
   modalOpen: false
 };

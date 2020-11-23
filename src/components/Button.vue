@@ -6,12 +6,6 @@
     class="button"
   >
     <UiLoading v-if="step === 'loading'" />
-    <span v-else-if="step === 'login'" v-text="'Connect wallet'" />
-    <span v-else-if="step === 'proxy'" v-text="'Setup proxy'" />
-    <span
-      v-else-if="step === 'approval'"
-      v-text="`Unlock ${nextRequiredApproval.symbol}`"
-    />
     <slot v-else />
   </button>
 </template>
@@ -22,10 +16,7 @@ import { mapActions } from 'vuex';
 export default {
   props: {
     disabled: !Boolean,
-    loading: !Boolean,
-    requireLogin: !Boolean,
-    requireProxy: !Boolean,
-    requireApprovals: !Object
+    loading: !Boolean
   },
   data() {
     return {
@@ -43,7 +34,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['createProxy', 'approve']),
     async handleClick() {
       if (!this.step) return this.$emit('submit');
     }

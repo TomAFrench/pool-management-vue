@@ -124,9 +124,6 @@
       </div>
       <template slot="footer">
         <Button
-          :requireLogin="true"
-          :requireProxy="true"
-          :requireApprovals="requiredApprovals"
           @submit="handleSubmit"
           :disabled="
             tokenError ||

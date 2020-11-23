@@ -110,9 +110,6 @@ const mutations = {
   GET_BALANCES_FAILURE(_state, payload) {
     console.debug('GET_BALANCES_FAILURE', payload);
   },
-  GET_PROXY_REQUEST() {
-    console.debug('GET_PROXY_REQUEST');
-  },
   GET_BLOCK_SUCCESS(_state, blockNumber) {
     Vue.set(_state, 'blockNumber', blockNumber);
     console.debug('GET_BLOCK_SUCCESS', blockNumber);
