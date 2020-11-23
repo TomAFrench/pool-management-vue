@@ -55,7 +55,7 @@ const getters = {
 const actions = {
   async processTransactions({ dispatch }, { transactions, title }) {
     console.log('Send transaction', title, transactions);
-    const tx = await dispatch('sendGnosisTransactions', transactions);
+    const tx = await dispatch('sendGnosisTransactions', { transactions });
 
     // console.log('Watch transaction', tx);
     // commit('watchTransaction', { ...tx, title });

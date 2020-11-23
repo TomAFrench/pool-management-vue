@@ -28,7 +28,7 @@ const actions = {
     commit('ON_SAFE_INFO_SUCCESS', payload);
   },
   sendGnosisTransactions: async (_, { transactions }) => {
-    state.appsSdk.sendTransactions(transactions);
+    return state.appsSdk.sendTransactions(transactions);
   }
 };
 
