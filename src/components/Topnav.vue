@@ -91,11 +91,7 @@ export default {
   computed: {
     ...mapGetters(['myPendingTransactions']),
     wrongNetwork() {
-      return (
-        this.config.chainId !== this.web3.injectedChainId &&
-        !this.ui.authLoading &&
-        !this.loading
-      );
+      return !this.ui.authLoading && !this.loading;
     },
     links() {
       return [

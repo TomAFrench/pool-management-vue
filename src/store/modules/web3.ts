@@ -7,8 +7,6 @@ import config from '@/config';
 import provider from '@/helpers/provider';
 import { multicall } from '@/_balancer/utils';
 
-let auth;
-
 if (provider) {
   provider.on('block', blockNumber => {
     store.commit('GET_BLOCK_SUCCESS', blockNumber);
@@ -16,8 +14,6 @@ if (provider) {
 }
 
 const state = {
-  injectedLoaded: false,
-  injectedChainId: null,
   blockNumber: 0,
   account: null,
   name: null,
@@ -27,15 +23,6 @@ const state = {
 };
 
 const mutations = {
-  LOGOUT(_state) {
-    Vue.set(_state, 'injectedLoaded', false);
-    Vue.set(_state, 'injectedChainId', null);
-    Vue.set(_state, 'account', null);
-    Vue.set(_state, 'name', null);
-    Vue.set(_state, 'active', false);
-    Vue.set(_state, 'balances', {});
-    console.debug('LOGOUT');
-  },
   LOAD_TOKEN_METADATA_REQUEST() {
     console.debug('LOAD_TOKEN_METADATA_REQUEST');
   },
@@ -56,24 +43,6 @@ const mutations = {
   },
   LOAD_WEB3_FAILURE(_state, payload) {
     console.debug('LOAD_WEB3_FAILURE', payload);
-  },
-  LOAD_PROVIDER_REQUEST() {
-    console.debug('LOAD_PROVIDER_REQUEST');
-  },
-  LOAD_PROVIDER_SUCCESS(_state, payload) {
-    Vue.set(_state, 'injectedLoaded', payload.injectedLoaded);
-    Vue.set(_state, 'injectedChainId', payload.injectedChainId);
-    Vue.set(_state, 'account', payload.account);
-    Vue.set(_state, 'name', payload.name);
-    Vue.set(_state, 'active', true);
-    console.debug('LOAD_PROVIDER_SUCCESS');
-  },
-  LOAD_PROVIDER_FAILURE(_state, payload) {
-    Vue.set(_state, 'injectedLoaded', false);
-    Vue.set(_state, 'injectedChainId', null);
-    Vue.set(_state, 'account', null);
-    Vue.set(_state, 'active', false);
-    console.debug('LOAD_PROVIDER_FAILURE', payload);
   },
   GET_LATEST_BLOCK_REQUEST() {
     console.debug('GET_LATEST_BLOCK_REQUEST');
@@ -117,10 +86,6 @@ const mutations = {
 };
 
 const actions = {
-  logout: async ({ commit }) => {
-    Vue.prototype.$auth.logout();
-    commit('LOGOUT');
-  },
   initTokenMetadata: async ({ commit }) => {
     const invalids = ['0xD46bA6D942050d489DBd938a2C909A5d5039A161'];
     const metadata = Object.fromEntries(
@@ -168,58 +133,11 @@ const actions = {
   loadWeb3: async ({ commit, dispatch }) => {
     commit('LOAD_WEB3_REQUEST');
     try {
-      if (auth.provider) await dispatch('loadProvider');
-      if (state.injectedChainId === config.chainId) {
-        await dispatch('loadAccount');
-        await dispatch('checkPendingTransactions');
-      }
+      await dispatch('loadAccount');
+      await dispatch('checkPendingTransactions');
       commit('LOAD_WEB3_SUCCESS');
     } catch (e) {
       commit('LOAD_WEB3_FAILURE', e);
-      return Promise.reject();
-    }
-  },
-  loadProvider: async ({ commit, dispatch }) => {
-    commit('LOAD_PROVIDER_REQUEST');
-    try {
-      if (auth.provider.removeAllListeners) auth.provider.removeAllListeners();
-      if (auth.provider && auth.provider.on) {
-        auth.provider.on('accountsChanged', async accounts => {
-          if (accounts.length === 0) {
-            if (state.active) await dispatch('loadWeb3');
-          } else {
-            commit('HANDLE_ACCOUNTS_CHANGED', accounts[0]);
-            await dispatch('clearUser');
-            await dispatch('loadAccount');
-          }
-        });
-        auth.provider.on('disconnect', async () => {
-          commit('HANDLE_DISCONNECT');
-          if (state.active) await dispatch('loadWeb3');
-        });
-        auth.provider.on('networkChanged', async () => {
-          commit('HANDLE_NETWORK_CHANGED');
-          if (state.active) {
-            await dispatch('clearUser');
-            await dispatch('logout');
-          }
-        });
-      }
-      const [network, accounts] = await Promise.all([
-        auth.web3.getNetwork(),
-        auth.web3.listAccounts()
-      ]);
-      const account = accounts.length > 0 ? accounts[0] : null;
-      let name = '';
-      if (config.chainId === 1) name = await provider.lookupAddress(account);
-      commit('LOAD_PROVIDER_SUCCESS', {
-        injectedLoaded: true,
-        injectedChainId: network.chainId,
-        account,
-        name
-      });
-    } catch (e) {
-      commit('LOAD_PROVIDER_FAILURE', e);
       return Promise.reject();
     }
   },

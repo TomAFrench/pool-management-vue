@@ -23,7 +23,6 @@ const mutations = {
 const actions = {
   ON_SAFE_INFO: async ({ commit, dispatch }, payload) => {
     commit('HANDLE_ACCOUNTS_CHANGED', payload.safeAddress);
-    await dispatch('loadAccount');
     await dispatch('loadWeb3');
     commit('ON_SAFE_INFO_SUCCESS', payload);
   },

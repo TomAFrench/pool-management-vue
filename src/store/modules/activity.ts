@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { lsGet, lsRemove, lsSet } from '@/helpers/localStorage';
 import provider from '@/helpers/provider';
+import config from '@/config';
 
 const state = {
   transactions: lsGet('transactions') || {}
@@ -38,8 +39,7 @@ const getters = {
     return Object.values(state.transactions)
       .filter(
         (tx: any) =>
-          tx.chainId === rootState.web3.injectedChainId &&
-          tx.from === rootState.web3.account
+          tx.chainId === config.chainId && tx.from === rootState.web3.account
       )
       .sort((a: any, b: any) => b.addedAt - a.addedAt);
   },
