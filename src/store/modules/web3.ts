@@ -202,7 +202,6 @@ const actions = {
           if (state.active) {
             await dispatch('clearUser');
             await dispatch('logout');
-            await dispatch('login');
           }
         });
       }

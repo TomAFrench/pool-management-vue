@@ -71,7 +71,6 @@
       <ModalActivity
         :open="modalOpen.activity"
         @close="modalOpen.activity = false"
-        @login="handleLogin"
       />
     </portal>
   </nav>
@@ -116,14 +115,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['toggleSidebar']),
-    ...mapActions(['login']),
-    async handleLogin(connector) {
-      this.modalOpen.account = false;
-      this.loading = true;
-      await this.login(connector);
-      this.loading = false;
-    }
+    ...mapActions(['toggleSidebar'])
   }
 };
 </script>
