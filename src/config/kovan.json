@@ -2,8 +2,8 @@
   "network": "kovan",
   "chainId": 42,
   "defaultPrecision": 2,
-  "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/C467LJc7Aa761LLxlcxXvhIG9HzDTtKw",
-  "wsUrl": "wss://eth-kovan.ws.alchemyapi.io/v2/C467LJc7Aa761LLxlcxXvhIG9HzDTtKw",
+  "rpcUrl": "https://eth-kovan.alchemyapi.io/v2/B7pp7tX3sRIsr4E9Smag-9HA-KKsv2St",
+  "wsUrl": "wss://eth-kovan.ws.alchemyapi.io/v2/B7pp7tX3sRIsr4E9Smag-9HA-KKsv2St",
   "subgraphUrl": "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-kovan",
   "explorer": "https://kovan.etherscan.io",
   "addresses": {

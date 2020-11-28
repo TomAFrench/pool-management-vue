@@ -1,0 +1,38 @@
+{
+  "tokens": {
+    "0xc778417e063141139fce010982780140aa0cd5ab": {
+      "address": "0xc778417e063141139fce010982780140aa0cd5ab",
+      "id": "weth",
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "decimals": 18,
+      "precision": 4,
+      "color": "#828384",
+      "hasIcon": false,
+      "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    "0xF95c750ECd6179373e7523182f0127CDB0E90c24": {
+      "address": "0xF95c750ECd6179373e7523182f0127CDB0E90c24",
+      "id": "dai",
+      "name": "DAI",
+      "symbol": "DAI",
+      "decimals": 18,
+      "precision": 4,
+      "color": "#fab323",
+      "hasIcon": true,
+      "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6b175474e89094c44da98b954eedeac495271d0f/logo.png"
+    },
+    "0x79Fd555b0e5837684c17a486dF730F3c08404d42": {
+      "address": "0x79Fd555b0e5837684c17a486dF730F3c08404d42",
+      "id": "usdc",
+      "name": "USDC",
+      "symbol": "USDC",
+      "decimals": 6,
+      "precision": 4,
+      "color": "#2875ca",
+      "hasIcon": true,
+      "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48/logo.png"
+    }
+  },
+  "untrusted": []
+}
