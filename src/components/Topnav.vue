@@ -3,17 +3,23 @@
     <div class="d-flex flex-items-center px-5" style="height: 78px;">
       <div class="flex-auto d-flex flex-items-center">
         <div class="d-inline-block text-black d-flex" style="padding-top: 2px;">
-          <img
-            src="~/@/assets/logo.svg"
-            class="mr-2 v-align-middle"
-            width="32"
-            height="32"
-          />
-          <span
-            class="d-inline-block "
-            style="letter-spacing: 1px; font-size: 16px;"
-            v-text="'Balancer'"
-          />
+          <router-link
+            :to="{ name: 'home' }"
+            class="d-inline-block d-flex"
+            style="padding-top: 2px;"
+          >
+            <img
+              src="~/@/assets/logo.svg"
+              class="mr-2 v-align-middle"
+              width="32"
+              height="32"
+            />
+            <span
+              class="d-inline-block "
+              style="letter-spacing: 1px; font-size: 16px;"
+              v-text="'Balancer'"
+            />
+          </router-link>
         </div>
       </div>
       <NavToggle class="v-align-middle" :items="links" />
