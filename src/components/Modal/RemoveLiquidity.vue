@@ -23,7 +23,7 @@
             <UiTableTh>
               <div v-text="$t('asset')" class="column-lg flex-auto text-left" />
               <div v-text="$t('myPoolBalance')" class="column" />
-              <div v-text="$t('removeLiquidity')" class="column-sm" />
+              <div v-text="$t('withdrawalAmt')" class="column-sm" />
             </UiTableTh>
             <UiTableTr
               v-for="token in tokens"
@@ -46,8 +46,16 @@
                     }
                   "
                 />
-                <Token :address="token.address" class="mr-3" size="20" />
-                <div v-text="token.symbol" />
+                <div
+                  :class="
+                    token.symbol.length > 14 && 'tooltipped tooltipped-ne'
+                  "
+                  :aria-label="token.symbol"
+                  class="d-flex flex-items-center"
+                >
+                  <Token :address="token.address" class="mr-3" size="20" />
+                  {{ _shorten(token.symbol, 14) }}
+                </div>
               </div>
               <div class="column">
                 {{ _num(token.myBalance) }}
@@ -69,6 +77,10 @@
               <input
                 id="poolAmountIn"
                 v-model="poolAmountIn"
+                :max="totalShares"
+                :min="0"
+                type="number"
+                step="any"
                 :class="validationError ? 'text-red' : 'text-black'"
                 class="input text-right column-sm"
                 placeholder="0.0"
@@ -119,6 +131,7 @@ import { calcSingleOutGivenPoolIn } from '@/helpers/math';
 import { validateNumberInput, formatError } from '@/helpers/validation';
 
 const BALANCE_BUFFER = 0.01;
+const SINGLE_TOKEN_THRESHOLD = 0.99;
 
 export default {
   props: ['open', 'pool', 'bPool'],
@@ -198,6 +211,11 @@ export default {
           token => token.address === tokenOutAddress
         );
 
+        // Seem to be rare cases when a token isn't selected
+        if (!tokenOut) {
+          return this.$t('selectToken');
+        }
+
         const maxOutRatio = 1 / 3;
         const amount = denormalizeBalance(this.poolAmountIn, 18);
 
@@ -210,7 +228,7 @@ export default {
         const totalWeight = bnum(this.pool.totalWeight).times('1e18');
         const swapFee = bnum(this.pool.swapFee).times('1e18');
 
-        if (amount.div(poolSupply).gt(0.99)) {
+        if (amount.div(poolSupply).gt(SINGLE_TOKEN_THRESHOLD)) {
           // Invalidate user's attempt to withdraw the entire pool supply in a single token
           // At amounts close to 100%, solidity math freaks out
           return this.$t('insufficientLiquidity');
@@ -224,6 +242,7 @@ export default {
           amount,
           swapFee
         );
+
         if (tokenAmountOut.div(tokenBalanceOut).gt(maxOutRatio)) {
           return this.$t('insufficientLiquidity');
         }
@@ -249,7 +268,7 @@ export default {
       const totalWeight = bnum(this.pool.totalWeight).times('1e18');
       const swapFee = bnum(this.pool.swapFee).times('1e18');
 
-      if (amount.div(poolSupply).gt(0.99)) {
+      if (amount.div(poolSupply).gt(SINGLE_TOKEN_THRESHOLD)) {
         // Invalidate user's attempt to withdraw the entire pool supply in a single token
         // At amounts close to 100%, solidity math freaks out
         return 0;
@@ -352,6 +371,12 @@ export default {
         const poolSupply = denormalizeBalance(this.totalShares, 18);
         const totalWeight = bnum(this.pool.totalWeight).times('1e18');
         const swapFee = bnum(this.pool.swapFee).times('1e18');
+
+        // Need this check here as well (same as in validationError)
+        // Otherwise, if amount > poolSupply, ratio is negative, and bpowApprox will not converge
+        if (amount.div(poolSupply).gt(SINGLE_TOKEN_THRESHOLD)) {
+          return 0;
+        }
 
         const tokenAmountOut = calcSingleOutGivenPoolIn(
           tokenBalanceOut,

@@ -8,8 +8,13 @@
 </template>
 
 <script>
-import { formatFilters } from '@/helpers/utils';
-import pools from '@/_balancer/pools.json';
+import pools from '@balancer-labs/assets/data/pools.json';
+import {
+  amplAddress,
+  clone,
+  formatFilters,
+  validAmplPools
+} from '@/helpers/utils';
 
 export default {
   data() {
@@ -27,12 +32,16 @@ export default {
   },
   computed: {
     query() {
-      let query = this.querySharedPools;
+      let query = clone(this.querySharedPools);
       const filters = formatFilters(this.filters);
       if (filters.type === 'smart') query = this.querySmartPools;
       if (filters.type === 'private') query = this.queryPrivatePools;
       if (filters.token && filters.token.length > 0) {
-        query.where.tokensList_contains = filters.token;
+        if (filters.token.includes(amplAddress) && filters.type === 'shared') {
+          query.where.id_in = validAmplPools;
+        } else {
+          query.where.tokensList_contains = filters.token;
+        }
       }
       return query;
     },
@@ -61,7 +70,8 @@ export default {
     queryPrivatePools() {
       return {
         where: {
-          finalized: false
+          finalized: false,
+          crp: false
         }
       };
     }

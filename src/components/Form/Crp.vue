@@ -63,7 +63,7 @@
         <div v-if="rights.canChangeWeights">
           <span v-text="$t('minimumUpdatePeriod')" />
           <input
-            class="ml-2 input pool-input text-right "
+            class="ml-2 input pool-input text-right"
             type="number"
             :value="minimumWeightChangeBlockPeriod"
             :min="0"
@@ -81,7 +81,7 @@
         <div v-if="rights.canAddRemoveTokens">
           <span v-text="$t('addTokenTimelock')" />
           <input
-            class="ml-2 input pool-input text-right "
+            class="ml-2 input pool-input text-right"
             type="number"
             :min="0"
             :step="10"

@@ -25,7 +25,7 @@ export default {
 
 .checkbox {
   .iconfont {
-    color: $info;
+    color: $gnosis-primary;
   }
 
   &.error {

@@ -49,7 +49,6 @@
         @reload="loadPool"
       />
       <ModalCustomToken
-        v-if="hasCustomToken && !bPool.isWhitelisted()"
         :open="modalCustomTokenOpen"
         @close="modalCustomTokenOpen = false"
       />
@@ -137,7 +136,7 @@ export default {
         await this.loadTokenMetadata(unknownTokens);
         await this.loadPricesByAddress(unknownTokens);
       }
-      if (!this.ui.authLoading) {
+      if (this.web3.account) {
         const data = await Promise.all([
           this.getBalances([
             ...this.pool.tokensList,
@@ -170,8 +169,10 @@ export default {
     this.loading = true;
     await this.loadPool();
     this.loading = false;
-    if (this.hasCustomToken && !this.bPool.isWhitelisted())
-      this.modalCustomTokenOpen = true;
+    setTimeout(() => {
+      if (this.hasCustomToken && !this.bPool.isWhitelisted())
+        this.modalCustomTokenOpen = true;
+    }, 1e2);
   }
 };
 </script>

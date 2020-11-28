@@ -21,6 +21,13 @@
       </div>
       <br />
     </div>
+    <div v-if="bPool.metadata.tokens.length == 0">
+      <div class="d-flex flex-items-center p-4 warning-box">
+        <Icon name="warning" size="22" class="mr-4" />
+        <div v-text="$t('deadPoolWarning')" />
+      </div>
+      <br />
+    </div>
     <div v-if="bPool.isCrp()" class="mb-3">
       <div v-text="$t('rights')" class="mb-2" />
       <template v-if="Object.keys(rights).length > 0">
@@ -58,6 +65,53 @@
     <div v-if="rights.canAddRemoveTokens" class="mb-3">
       <div v-text="$t('addTokenTimelock')" class="mb-2" />
       <h5 v-text="_num(bPool.metadata.addTokenTimeLockInBlocks)" />
+    </div>
+    <div v-if="ongoingUpdate" class="mb-3">
+      <div class="d-flex flex-items-center p-4 warning-box">
+        <Icon name="warning" size="22" class="mr-4" />
+        <div
+          v-if="updateFinished"
+          v-text="$t('updateFinishedWarning', { endTime })"
+        />
+        <div
+          v-else
+          v-html="
+            $t('ongoingUpdate', {
+              startTime,
+              startBlock: bPool.metadata.startBlock,
+              endTime,
+              endBlock: bPool.metadata.endBlock
+            })
+          "
+        />
+      </div>
+    </div>
+    <div v-if="bPool.isCrp() && lbpData.isLbpPool">
+      <h5
+        v-text="
+          `${$t('currentPrice', { token: lbpData.projectToken })}: ${_num(
+            lbpData.lbpPrice,
+            'usd'
+          )}`
+        "
+        format="currency"
+        class="text-white"
+      />
+      <br />
+    </div>
+    <div v-if="rights.canChangeWeights" class="mb-3">
+      <div v-text="$t('minimumUpdatePeriod')" class="mb-2" />
+      <h5
+        v-text="_num(bPool.metadata.minimumWeightChangeBlockPeriod)"
+        class="text-white"
+      />
+    </div>
+    <div v-if="rights.canAddRemoveTokens" class="mb-3">
+      <div v-text="$t('addTokenTimelock')" class="mb-2" />
+      <h5
+        v-text="_num(bPool.metadata.addTokenTimeLockInBlocks)"
+        class="text-white"
+      />
     </div>
     <div v-if="rights.canChangeCap" class="mb-3">
       <div v-text="$t('cap')" class="mb-2" />
@@ -153,14 +207,18 @@ import {
   MAX,
   blockNumberToTimestamp
 } from '@/helpers/utils';
+import { mapActions } from 'vuex';
+import { getLbpData } from '@/helpers/lbpData';
 import { getFactors } from '@/helpers/miningFactors';
 
 export default {
-  props: ['bPool'],
+  props: ['bPool', 'pool'],
   data() {
     return {
       poolRights,
-      MAX
+      MAX,
+      page: 0,
+      swaps: []
     };
   },
   computed: {
@@ -172,6 +230,9 @@ export default {
     },
     ongoingUpdate() {
       return this.bPool.isCrp() && this.bPool.metadata.startBlock !== '0';
+    },
+    lbpData() {
+      return getLbpData(this.pool, this.config.chainId);
     },
     updateFinished() {
       return (
@@ -187,6 +248,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getLbpSwaps']),
     blockDate(block) {
       const blockTimestamp = blockNumberToTimestamp(
         Date.now(),
