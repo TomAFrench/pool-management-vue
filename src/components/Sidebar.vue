@@ -98,8 +98,8 @@ export default {
     padding: 10px 22px 12px;
 
     &.active {
-      background: $blue-900;
-      border-left: 3px solid $blue;
+      background: $gnosis-primary;
+      border-left: 3px solid $gnosis-primary-hover;
       padding-left: 19px;
     }
   }

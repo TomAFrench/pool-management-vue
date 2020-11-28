@@ -105,7 +105,7 @@ export default {
   }
 
   .topic-button {
-    background-color: $blue-900;
+    background-color: $gnosis-primary;
     color: $white;
     border: 0;
     border-radius: 24px;

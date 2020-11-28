@@ -224,7 +224,7 @@ export default {
 }
 
 .tab.active {
-  background-color: $blue-900;
+  background-color: $gnosis-primary;
   color: #fff;
 }
 </style>

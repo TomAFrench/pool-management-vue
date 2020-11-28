@@ -1,24 +1,35 @@
 @import '~primer-support';
 
+// Gnosis Theme
+$gnosis-primary: #008c73;
+$gnosis-primary-light: #a1d2ca;
+$gnosis-primary-hover: #005546;
+$gnosis-primary-disabled: #008c7380;
+$gnosis-secondary: #001428;
+$gnosis-secondary-light: #B2B5B2;
+$gnosis-secondary-hover: #5d6d74;
+$gnosis-secondary-disabled: #00142880;
+$gnosis-red: #f02525;
+
 $link-text: #82b1ff;
 $warning: #ffc780;
-$error: #ff8a80;
+$error: $gnosis-red;
 $info: #7685d5;
 $input-hover-border: #4c5480;
-$primary-button-background: #008c73;
-$primary-button-background-hover: #005546;
-$primary-button-border: #008c73;
+$primary-button-background: $gnosis-primary;
+$primary-button-background-hover: $gnosis-primary-hover;
+$primary-button-border: $gnosis-primary;
 $primary-button-text: #ffffff;
 $secondary-button-background: #001428;
-$secondary-button-background-hover: #B2B5B2;
-$secondary-button-border: #B2B5B2;
+$secondary-button-background-hover: $gnosis-secondary-light;
+$secondary-button-border: $gnosis-secondary-light;
 $secondary-button-text: #ffffff;
-$button-disabled: #008c7380;
+$button-disabled: $gnosis-primary-disabled;
 $button-disabled-text: #ffffff;
 $panel-border: #f7f5f5;
 $panel-background: #ffffff;
 $panel-header-background: #fafafa;
-$highlighted-selector-border: #008c73;
+$highlighted-selector-border: $gnosis-primary;
 
 // PrimerCSS
 $black: #000000;
@@ -28,13 +39,12 @@ $bg-blue-light: #F7F8FC;
 $bg-gray: #000000;
 $bg-green: #21b66f;
 $text-blue: #384AFF;
-$text-red: #ff8a80;
+$text-red: $gnosis-red;
 $text-yellow: #ffc780;
 $blue-100: #DCE2FF;
 $gray: $bg-gray;
 $text-gray: $gray;
 $blue: #7685d5;
-$blue-900: #008c73;
 $gray-dark: #282a32;
 $bg-gray-dark: $gray-dark;
 

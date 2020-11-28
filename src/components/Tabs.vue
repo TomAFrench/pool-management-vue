@@ -86,7 +86,7 @@ export default {
         border-radius: $border-radius $border-radius 0 0;
 
         &.router-link-exact-active {
-          background-color: $blue-900;
+          background-color: $gnosis-primary;
           color: #fff;
         }
       }
