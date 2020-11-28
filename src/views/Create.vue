@@ -2,7 +2,7 @@
   <Page>
     <div class="d-flex px-4 px-md-0 mb-3">
       <Toggle
-        class="tooltipped tooltipped-n"
+        class="tooltipped tooltipped-ne"
         :value="type"
         :options="poolTypes"
         :aria-label="
