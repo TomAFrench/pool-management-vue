@@ -554,7 +554,8 @@ export default {
             const tokenAmountIn = BigNumber.min(inputAmountIn, balanceAmountIn);
             return tokenAmountIn.toString();
           }),
-          isCrp: this.bPool.isCrp()
+          isCrp: this.bPool.isCrp(),
+          tokensList: this.pool.tokensList
         };
         const txResult = await this.joinPool(params);
         if (isTxReverted(txResult)) this.transactionReverted = true;

@@ -343,11 +343,17 @@ const actions = {
   },
   joinPool: async (
     { commit, dispatch },
-    { poolAddress, poolAmountOut, maxAmountsIn, isCrp = false }
+    { poolAddress, poolAmountOut, maxAmountsIn, tokensList, isCrp = false }
   ) => {
     commit('JOIN_POOL_REQUEST');
     try {
-      const transaction = makeGnosisTransaction(
+      const approvalTransactions = tokensList.map((token, index) =>
+        makeGnosisTransaction('TestToken', token, 'approve', [
+          config.addresses.bActions,
+          maxAmountsIn[index]
+        ])
+      );
+      const joinTransaction = makeGnosisTransaction(
         'BActions',
         config.addresses.bActions,
         isCrp ? 'joinSmartPool' : 'joinPool',
@@ -355,7 +361,7 @@ const actions = {
       );
       await dispatch('processTransactions', {
         title: 'Add liquidity',
-        transactions: [transaction]
+        transactions: [...approvalTransactions, joinTransaction]
       });
       await Promise.all([
         dispatch('getBalances'),
