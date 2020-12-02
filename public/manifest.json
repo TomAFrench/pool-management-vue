@@ -1,7 +1,7 @@
 {
   "short_name": "Pool Management",
   "name": "Balancer Pool Management",
-  "description": "Dashboard for Balancer liquidity providers",
+  "description": "Manage liquidity on Balancer from your Gnosis Safe",
   "providedBy": {"name": "Balancer Labs", "url": "https://balancer.finance"},
   "icons": [
     {
