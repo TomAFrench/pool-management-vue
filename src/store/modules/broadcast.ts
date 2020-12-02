@@ -310,6 +310,7 @@ const actions = {
           rights
         ])
       );
+      // Approve BActions contract to take seed tokens for pool
       const approvalTransactions = constituentTokens.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
           config.addresses.bActions,
@@ -347,6 +348,7 @@ const actions = {
   ) => {
     commit('JOIN_POOL_REQUEST');
     try {
+      // Approve BActions contract to take tokens for depositing
       const approvalTransactions = tokensList.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
           config.addresses.bActions,
@@ -382,6 +384,7 @@ const actions = {
   ) => {
     commit('JOINSWAP_EXTERN_AMOUNT_REQUEST');
     try {
+      // Approve BActions contract to take token to be swapped into others to deposit
       const approvalTransaction = makeGnosisTransaction(
         'TestToken',
         tokenInAddress,
@@ -417,6 +420,7 @@ const actions = {
   ) => {
     commit('EXIT_POOL_REQUEST');
     try {
+      // No approval necessary as pool can always take Safe's BPT
       const transaction = makeGnosisTransaction(
         'BPool',
         poolAddress,
@@ -446,6 +450,7 @@ const actions = {
   ) => {
     commit('EXITSWAP_POOL_AMOUNT_IN_REQUEST');
     try {
+      // No approval necessary as pool can always take Safe's BPT
       const transaction = makeGnosisTransaction(
         'BPool',
         poolAddress,
@@ -601,6 +606,8 @@ const actions = {
         .div(2)
         .toString();
       poolAmountIn = toWei(poolAmountIn);
+      // Approve the BActions contract to take BPT from Safe
+      // Safe will receive token in return
       const approvalTransaction = makeGnosisTransaction(
         'TestToken',
         poolAddress,
@@ -706,6 +713,7 @@ const actions = {
   ) => {
     commit('APPLY_ADD_TOKEN_REQUEST');
     try {
+      // Token is taken on applying to add the token so we approve now
       const approvalTransaction = makeGnosisTransaction(
         'TestToken',
         token,
@@ -738,6 +746,8 @@ const actions = {
     console.log(`poolAmountIn = ${poolAmountIn}`);
 
     try {
+      // Approve the BActions contract to take BPT from Safe
+      // Safe will receive token in return
       const approvalTransaction = makeGnosisTransaction(
         'TestToken',
         poolAddress,
