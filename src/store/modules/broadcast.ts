@@ -230,10 +230,10 @@ const actions = {
       swapFee = toWei(swapFee)
         .div(100)
         .toString();
-      const approvalTransactions = tokens.map(token =>
+      const approvalTransactions = tokens.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
           config.addresses.bActions,
-          balances[token]
+          balances[index]
         ])
       );
       const createPoolTransaction = makeGnosisTransaction(
@@ -310,10 +310,10 @@ const actions = {
           rights
         ])
       );
-      const approvalTransactions = constituentTokens.map(token =>
+      const approvalTransactions = constituentTokens.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
           config.addresses.bActions,
-          tokenBalances[token]
+          tokenBalances[index]
         ])
       );
       const createPoolTransaction = makeGnosisTransaction(
