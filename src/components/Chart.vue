@@ -191,7 +191,7 @@ export default {
       } else {
         this.chart.removeSeries(this.series);
       }
-      const color = '#008c73';
+      const color = '#B2B5B2';
       if (this.activeTab === 'LIQUIDITY') {
         this.series = this.chart.addAreaSeries({
           lineColor: color,
