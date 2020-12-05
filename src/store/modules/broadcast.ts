@@ -478,10 +478,10 @@ const actions = {
     commit('SET_PUBLIC_SWAP_REQUEST');
     try {
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'setPublicSwap',
-        [poolAddress, publicSwap]
+        [publicSwap]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -500,10 +500,10 @@ const actions = {
         .div(100)
         .toString();
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'setSwapFee',
-        [poolAddress, newFee]
+        [newFee]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -545,10 +545,10 @@ const actions = {
     commit('SET_CONTROLLER_REQUEST');
     try {
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'setController',
-        [poolAddress, newController]
+        [newController]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -578,13 +578,13 @@ const actions = {
         'TestToken',
         token,
         'approve',
-        [config.addresses.bActions, tokenAmountIn]
+        [poolAddress, tokenAmountIn]
       );
       const increaseWeightTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'increaseWeight',
-        [poolAddress, token, newWeight, tokenAmountIn]
+        [token, newWeight, tokenAmountIn]
       );
       await dispatch('processTransactions', {
         transactions: [approvalTransaction, increaseWeightTransaction]
@@ -606,22 +606,15 @@ const actions = {
         .div(2)
         .toString();
       poolAmountIn = toWei(poolAmountIn);
-      // Approve the BActions contract to take BPT from Safe
-      // Safe will receive token in return
-      const approvalTransaction = makeGnosisTransaction(
-        'TestToken',
-        poolAddress,
-        'approve',
-        [config.addresses.bActions, poolAmountIn.toString()]
-      );
+      // Pool can always take pool tokens from Safe so no approval needed
       const decreaseWeightTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'decreaseWeight',
-        [poolAddress, token, newWeight, poolAmountIn.toString()]
+        [token, newWeight, poolAmountIn.toString()]
       );
       await dispatch('processTransactions', {
-        transactions: [approvalTransaction, decreaseWeightTransaction]
+        transactions: [decreaseWeightTransaction]
       });
       commit('DECREASE_WEIGHT_SUCCESS');
     } catch (e) {
@@ -642,10 +635,10 @@ const actions = {
           .toString();
       });
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'updateWeightsGradually',
-        [poolAddress, newWeights, startBlock, endBlock]
+        [newWeights, startBlock, endBlock]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -662,10 +655,10 @@ const actions = {
     try {
       newCap = toWei(newCap).toString();
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'setCap',
-        [poolAddress, newCap]
+        [newCap]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -692,10 +685,10 @@ const actions = {
         .div(2)
         .toString();
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'commitAddToken',
-        [poolAddress, token, balance, denormalizedWeight]
+        [token, balance, denormalizedWeight]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -713,18 +706,18 @@ const actions = {
   ) => {
     commit('APPLY_ADD_TOKEN_REQUEST');
     try {
-      // Token is taken on applying to add the token so we approve now
+      // Token is taken on applying addition of token so we approve now
       const approvalTransaction = makeGnosisTransaction(
         'TestToken',
         token,
         'approve',
-        [config.addresses.bActions, tokenAmountIn]
+        [poolAddress, tokenAmountIn]
       );
       const applyAddTokenTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'applyAddToken',
-        [poolAddress, token, tokenAmountIn]
+        []
       );
       await dispatch('processTransactions', {
         transactions: [approvalTransaction, applyAddTokenTransaction]
@@ -746,22 +739,15 @@ const actions = {
     console.log(`poolAmountIn = ${poolAmountIn}`);
 
     try {
-      // Approve the BActions contract to take BPT from Safe
-      // Safe will receive token in return
-      const approvalTransaction = makeGnosisTransaction(
-        'TestToken',
-        poolAddress,
-        'approve',
-        [config.addresses.bActions, poolAmountIn]
-      );
+      // No approval necessary as pool can always take Safe's BPT
       const removeTokenTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'removeToken',
-        [poolAddress, token, poolAmountIn.toString()]
+        [token, poolAmountIn.toString()]
       );
       await dispatch('processTransactions', {
-        transactions: [approvalTransaction, removeTokenTransaction]
+        transactions: [removeTokenTransaction]
       });
       commit('REMOVE_TOKEN_SUCCESS');
     } catch (e) {
@@ -777,10 +763,10 @@ const actions = {
     commit('WHITELIST_LP_REQUEST');
     try {
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'whitelistLiquidityProvider',
-        [poolAddress, provider]
+        [provider]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
@@ -799,10 +785,10 @@ const actions = {
     commit('REMOVE_WHITELISTED_LP_REQUEST');
     try {
       const transaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'ConfigurableRightsPool',
+        poolAddress,
         'removeWhitelistedLiquidityProvider',
-        [poolAddress, provider]
+        [provider]
       );
       await dispatch('processTransactions', {
         transactions: [transaction]
