@@ -95,7 +95,7 @@
           )}`
         "
         format="currency"
-        class="text-white"
+        class="text"
       />
       <br />
     </div>
@@ -103,15 +103,12 @@
       <div v-text="$t('minimumUpdatePeriod')" class="mb-2" />
       <h5
         v-text="_num(bPool.metadata.minimumWeightChangeBlockPeriod)"
-        class="text-white"
+        class="text"
       />
     </div>
     <div v-if="rights.canAddRemoveTokens" class="mb-3">
       <div v-text="$t('addTokenTimelock')" class="mb-2" />
-      <h5
-        v-text="_num(bPool.metadata.addTokenTimeLockInBlocks)"
-        class="text-white"
-      />
+      <h5 v-text="_num(bPool.metadata.addTokenTimeLockInBlocks)" class="text" />
     </div>
     <div v-if="rights.canChangeCap" class="mb-3">
       <div v-text="$t('cap')" class="mb-2" />
