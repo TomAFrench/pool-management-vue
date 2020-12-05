@@ -33,10 +33,6 @@
           />
         </UiTableTr>
       </UiTable>
-      <div v-if="isLocked" class="my-2 text-center">
-        {{ $t('unlock') }} {{ _ticker(tokenToSpend) }} {{ $t('toContinue') }}.
-        <ButtonUnlock :tokenAddress="tokenToSpend" :amount="amountToSpend" />
-      </div>
       <template slot="footer">
         <UiButton @click="$emit('close')" type="button" class="mx-1">
           {{ $t('cancel') }}
@@ -117,12 +113,6 @@ export default {
         return poolAmountIn.toString();
       }
       return '0';
-    },
-    isLocked() {
-      if (!this.tokenToSpend) {
-        return false;
-      }
-      return true;
     },
     isWeightIncrease() {
       const weight =
