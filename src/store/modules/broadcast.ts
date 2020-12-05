@@ -583,8 +583,8 @@ const actions = {
       const increaseWeightTransaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
         poolAddress,
-        'increaseWeight',
-        [token, newWeight, tokenAmountIn]
+        'updateWeight',
+        [token, newWeight]
       );
       await dispatch('processTransactions', {
         transactions: [approvalTransaction, increaseWeightTransaction]
@@ -605,13 +605,12 @@ const actions = {
       newWeight = toWei(newWeight)
         .div(2)
         .toString();
-      poolAmountIn = toWei(poolAmountIn);
       // Pool can always take pool tokens from Safe so no approval needed
       const decreaseWeightTransaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
         poolAddress,
-        'decreaseWeight',
-        [token, newWeight, poolAmountIn.toString()]
+        'updateWeight',
+        [token, newWeight]
       );
       await dispatch('processTransactions', {
         transactions: [decreaseWeightTransaction]
