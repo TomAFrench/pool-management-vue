@@ -230,15 +230,18 @@ const actions = {
       swapFee = toWei(swapFee)
         .div(100)
         .toString();
+
+      // Approve deployer contract to take seed tokens for pool
       const approvalTransactions = tokens.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
-          config.addresses.bActions,
+          config.addresses.poolDeployer,
           balances[index]
         ])
       );
+      // Deployer contract will create pool then transfer ownership to Gnosis Safe
       const createPoolTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'BalancerPoolDeployer',
+        config.addresses.poolDeployer,
         'create',
         [config.addresses.bFactory, tokens, balances, weights, swapFee, true]
       );
@@ -310,16 +313,17 @@ const actions = {
           rights
         ])
       );
-      // Approve BActions contract to take seed tokens for pool
+      // Approve deployer contract to take seed tokens for pool
       const approvalTransactions = constituentTokens.map((token, index) =>
         makeGnosisTransaction('TestToken', token, 'approve', [
-          config.addresses.bActions,
+          config.addresses.poolDeployer,
           tokenBalances[index]
         ])
       );
+      // Deployer contract will create pool then transfer ownership to Gnosis Safe
       const createPoolTransaction = makeGnosisTransaction(
-        'BActions',
-        config.addresses.bActions,
+        'BalancerPoolDeployer',
+        config.addresses.poolDeployer,
         'createSmartPool',
         [
           config.addresses.crpFactory,
@@ -598,7 +602,7 @@ const actions = {
   },
   decreaseWeight: async (
     { commit, dispatch },
-    { poolAddress, token, newWeight, poolAmountIn }
+    { poolAddress, token, newWeight /*poolAmountIn*/ }
   ) => {
     commit('DECREASE_WEIGHT_REQUEST');
     try {
