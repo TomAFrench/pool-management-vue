@@ -57,7 +57,19 @@
         />
       </div>
     </div>
-
+    <div v-if="bPool.isCrp() && lbpData.isLbpPool">
+      <h5
+        v-text="
+          `${$t('currentPrice', { token: lbpData.projectToken })}: ${_num(
+            lbpData.lbpPrice,
+            'usd'
+          )}`
+        "
+        format="currency"
+        class="text-black"
+      />
+      <br />
+    </div>
     <div v-if="rights.canChangeWeights" class="mb-3">
       <div v-text="$t('minimumUpdatePeriod')" class="mb-2" />
       <h5 v-text="_num(bPool.metadata.minimumWeightChangeBlockPeriod)" />

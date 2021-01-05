@@ -222,11 +222,6 @@ const actions = {
           .integerValue(BigNumber.ROUND_DOWN)
           .toString();
       });
-      weights = tokens.map(token => {
-        return toWei(weights[token])
-          .div(2)
-          .toString();
-      });
       swapFee = toWei(swapFee)
         .div(100)
         .toString();
@@ -263,8 +258,13 @@ const actions = {
     { poolParams, crpParams, rights }
   ) => {
     commit('CREATE_SMART_POOL_REQUEST');
-    const { poolTokenSymbol, poolTokenName, constituentTokens } = poolParams;
-    let { tokenBalances, tokenWeights, swapFee } = poolParams;
+    const {
+      poolTokenSymbol,
+      poolTokenName,
+      constituentTokens,
+      tokenWeights
+    } = poolParams;
+    let { tokenBalances, swapFee } = poolParams;
     let { initialSupply } = crpParams;
     const {
       minimumWeightChangeBlockPeriod,
@@ -278,11 +278,6 @@ const actions = {
         const decimals = tokenMetadata ? tokenMetadata.decimals : null;
         return denormalizeBalance(amount, decimals)
           .integerValue(BigNumber.ROUND_DOWN)
-          .toString();
-      });
-      tokenWeights = constituentTokens.map(token => {
-        return toWei(tokenWeights[token])
-          .div(2)
           .toString();
       });
       swapFee = toWei(swapFee)
