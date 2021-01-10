@@ -144,16 +144,15 @@
     </div>
     <MessageError v-if="validationError" :text="validationError" class="mt-4" />
     <MessageSimilarPools v-if="pool" :pool="pool" class="mt-4" />
-    <MessageCheckbox
-      v-if="!validationError"
+    <MessageWarningToken
+      v-if="!validationError && !warningAccepted"
       :custom="hasCustomToken"
-      :accepted="checkboxAccept"
-      @toggle="checkboxAccept = !checkboxAccept"
+      @accept="warningAccepted = true"
       class="mt-4"
     />
     <Button
       :loading="loading"
-      :disabled="validationError || !checkboxAccept"
+      :disabled="validationError || !warningAccepted"
       @submit="confirmModalOpen = true"
       class="button-primary mt-4"
     >
@@ -244,7 +243,7 @@ export default {
       tokenModalOpen: false,
       confirmModalOpen: false,
       padlock: true,
-      checkboxAccept: false
+      warningAccepted: false
     };
   },
   created() {

@@ -111,11 +111,10 @@
           class="mb-4"
         />
         <MessageError v-if="transferError" :text="transferError" class="mb-4" />
-        <MessageCheckbox
-          v-if="!tokenError && !validationError"
+        <MessageWarningToken
+          v-if="!tokenError && !validationError && !warningAccepted"
           :custom="hasCustomToken"
-          :accepted="checkboxAccept"
-          @toggle="checkboxAccept = !checkboxAccept"
+          @accept="warningAccepted = true"
           class="mb-4 text-left"
         />
         <MessageWarningRateChange
@@ -141,7 +140,7 @@
           :disabled="
             tokenError ||
               validationError ||
-              !checkboxAccept ||
+              !warningAccepted ||
               transactionReverted ||
               !addLiquidityEnabled
           "
@@ -193,7 +192,7 @@ export default {
       amounts: {},
       type: 'MULTI_ASSET',
       activeToken: null,
-      checkboxAccept: false,
+      warningAccepted: false,
       transactionReverted: false,
       addLiquidityEnabled: true
     };
@@ -209,7 +208,7 @@ export default {
       );
       this.type = 'MULTI_ASSET';
       this.activeToken = this.pool.tokens[0].checksum;
-      this.checkboxAccept = false;
+      this.warningAccepted = false;
       this.transactionReverted = false;
     },
     'web3.account': async function(val, prev) {
