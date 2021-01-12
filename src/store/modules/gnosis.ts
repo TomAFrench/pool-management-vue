@@ -1,17 +1,15 @@
 import Vue from 'vue';
-import initSdk, { SafeInfo } from '@gnosis.pm/safe-apps-sdk';
-import store from '@/store';
+import SafeAppsSDK, {
+  SafeInfo,
+  SendTransactionsResponse,
+  Transaction
+} from '@gnosis.pm/safe-apps-sdk';
 
-const state = {
-  safeInfo: {},
-  appsSdk: initSdk()
+const state: { safeInfo: SafeInfo } = {
+  safeInfo: {} as SafeInfo
 };
 
-if (state.appsSdk) {
-  state.appsSdk.addListeners({
-    onSafeInfo: (safeInfo: SafeInfo) => store.dispatch('ON_SAFE_INFO', safeInfo)
-  });
-}
+const appsSdk = new SafeAppsSDK();
 
 const mutations = {
   ON_SAFE_INFO_SUCCESS(_state, payload) {
@@ -21,13 +19,17 @@ const mutations = {
 };
 
 const actions = {
-  ON_SAFE_INFO: async ({ commit, dispatch }, payload) => {
-    commit('HANDLE_ACCOUNTS_CHANGED', payload.safeAddress);
+  getSafeInfo: async ({ commit, dispatch }) => {
+    const safe = await appsSdk.getSafeInfo();
+    commit('HANDLE_ACCOUNTS_CHANGED', safe.safeAddress);
     await dispatch('loadWeb3');
-    commit('ON_SAFE_INFO_SUCCESS', payload);
+    commit('ON_SAFE_INFO_SUCCESS', safe);
   },
-  sendGnosisTransactions: async (_, { transactions }) => {
-    return state.appsSdk.sendTransactions(transactions);
+  sendGnosisTransactions: async (
+    _,
+    { transactions }: { transactions: Transaction[] }
+  ): Promise<SendTransactionsResponse> => {
+    return appsSdk.txs.send({ txs: transactions });
   }
 };
 

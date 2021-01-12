@@ -37,10 +37,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['init', 'toggleSidebar', 'hideSidebar'])
+    ...mapActions(['init', 'getSafeInfo', 'toggleSidebar', 'hideSidebar'])
   },
   mounted() {
     this.init();
+    this.getSafeInfo();
   }
 };
 </script>
