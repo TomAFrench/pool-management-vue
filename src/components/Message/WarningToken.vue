@@ -4,7 +4,7 @@
       <div v-html="$t('tokenWarning1')" />
       <div class="mt-2" v-if="custom" v-html="$t('tokenWarning2')" />
     </div>
-    <UiButton class="button-red button-accept" @click="$emit('accept')">
+    <UiButton class="button-white button-accept" @click="$emit('accept')">
       I agree
     </UiButton>
   </div>
