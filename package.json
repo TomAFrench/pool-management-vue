@@ -1,7 +1,7 @@
 {
-  "name": "pool-management-vue",
+  "name": "balancer-pools-safe-app",
   "version": "0.1.0",
-  "repository": "balancer-labs/pool-management-vue",
+  "repository": "tomafrench/balancer-pools-safe-app",
   "license": "GPL-3.0",
   "scripts": {
     "serve": "vue-cli-service serve",
