@@ -565,9 +565,7 @@ const actions = {
   ) => {
     commit('INCREASE_WEIGHT_REQUEST');
     try {
-      newWeight = toWei(newWeight)
-        .div(2)
-        .toString();
+      newWeight = toWei(newWeight).toString();
       const tokenMetadata = rootState.web3.tokenMetadata[token];
       const decimals = tokenMetadata ? tokenMetadata.decimals : null;
       tokenAmountIn = denormalizeBalance(tokenAmountIn, decimals)
@@ -601,9 +599,7 @@ const actions = {
   ) => {
     commit('DECREASE_WEIGHT_REQUEST');
     try {
-      newWeight = toWei(newWeight)
-        .div(2)
-        .toString();
+      newWeight = toWei(newWeight).toString();
       // Pool can always take pool tokens from Safe so no approval needed
       const decreaseWeightTransaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
@@ -628,9 +624,7 @@ const actions = {
     commit('UPDATE_WEIGHTS_GRADUALLY_REQUEST');
     try {
       newWeights = tokens.map(token => {
-        return toWei(newWeights[token])
-          .div(2)
-          .toString();
+        return toWei(newWeights[token]).toString();
       });
       const transaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
@@ -679,9 +673,7 @@ const actions = {
       balance = denormalizeBalance(balance, decimals)
         .integerValue(BigNumber.ROUND_DOWN)
         .toString();
-      denormalizedWeight = toWei(denormalizedWeight)
-        .div(2)
-        .toString();
+      denormalizedWeight = toWei(denormalizedWeight).toString();
       const transaction = makeGnosisTransaction(
         'ConfigurableRightsPool',
         poolAddress,
