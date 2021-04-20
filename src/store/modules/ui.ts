@@ -28,7 +28,8 @@ const actions = {
       .filter(tokenId => !!tokenId);
     await Promise.all([
       dispatch('loadPricesById', tokenIds),
-      dispatch('initTokenMetadata')
+      dispatch('initTokenMetadata'),
+      dispatch('getBlockNumber')
     ]);
     commit('SET', { loading: false, init: true });
   },

@@ -35,15 +35,33 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { getTotalPendingClaims } from '@/_balancer/claim';
+import provider from '@/helpers/provider';
 
 export default {
   data() {
     return {
       loading: false,
+      totalPendingClaims: false,
       modalOpen: {
         activity: false
       }
     };
+  },
+  watch: {
+    'web3.account': async function() {
+      this.totalPendingClaims = false;
+      if (!this.web3.account) return;
+      try {
+        this.totalPendingClaims = await getTotalPendingClaims(
+          this.config.chainId,
+          provider,
+          this.web3.account
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
   },
   computed: {
     ...mapGetters(['myPendingTransactions']),
